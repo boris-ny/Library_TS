@@ -1,0 +1,32 @@
+export interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string,
+  password2: string,
+}
+
+export interface Userlogin { 
+  email: string;
+  password: string;
+}
+
+export interface Book {
+  id: number,
+  title: string;
+  authorId: number;
+  summary: string;
+  isbn: string;
+  Genre: any;
+  genreId: number;
+
+}
+
+
+export interface ServiceError extends Error {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
