@@ -12,13 +12,14 @@ export interface Userlogin {
 }
 
 export interface Book {
-  id: number,
+  id?: number,
   title: string;
   authorId: number;
   summary: string;
   isbn: string;
   Genre: any;
   genreId: number;
+  Author: any;
 
 }
 

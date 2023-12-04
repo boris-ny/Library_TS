@@ -1,12 +1,17 @@
 import Genre from '../models/genre.models';
 import { Request, Response, } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import Book from '../models/book.models';
 
 // GET /genres
 
 export const getAllGenres = async (_req: Request, res: Response) => {
     try {
-        const genres = await Genre.findAll();
+        const genres = await Genre.findAll({
+            include: [
+                {model: Book}
+            ]
+        });
         return res.json({
             status: 200,
             message: "success",
@@ -23,7 +28,11 @@ export const getAllGenres = async (_req: Request, res: Response) => {
 
 export const getGenreById = async (req: Request, res: Response) => {
     try {
-        const genre = await Genre.findByPk(req.params.genreId);
+        const genre = await Genre.findByPk(req.params.genreId, {
+            include: [
+                {model: Book}
+            ]
+        });
         
         if (!genre) {
             return res.status(404).json({

@@ -1,11 +1,16 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FaSignInAlt } from "react-icons/fa";
+import * as formik from "formik";
 import { useNavigate } from "react-router-dom";
 import { Userlogin } from "../types/common";
+import { loginUser } from "../util/api";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { Container } from "react-bootstrap";
 
 function Login() {
+  const { Formik } = formik;
+
   const initialValues: Userlogin = {
     email: "",
     password: "",
@@ -19,24 +24,14 @@ function Login() {
       .min(4, "Password is too short - should be 4 chars minimum"),
   });
 
-  const loginUser = async (data: Userlogin) => {
-    return await fetch("http://localhost:5000/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then((res) => res.json());
-  };
   const navigate = useNavigate();
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={SignInSchema}
-      onSubmit={(values) => {
+      onSubmit={(values: Userlogin) => {
         loginUser(values)
           .then((data) => {
-            console.log(data);
             const token = data.accessToken;
             localStorage.setItem("token", token);
 
@@ -49,81 +44,75 @@ function Login() {
             });
 
             navigate("/");
-            
           })
           .catch((err) => {
-            console.log(err);
-
             Swal.fire({
               title: "Error!",
-              text: "Invalid email or password!",
+              text: `Invalid ${err.response.data.err}!}`,
               background: "#242424",
               icon: "error",
               timer: 10000,
             });
           });
       }}>
-      {(formik) => {
-        const { errors, touched, isValid, dirty } = formik;
-
-        console.log(errors);
-
-        return (
-          <>
-            <div className="heading">
-              <FaSignInAlt />
-              Sign in to continue
-            </div>
-            <div className="form">
-              <Form>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <Field
-                    type="email"
-                    name="email"
-                    id="email"
-                    className={
-                      errors.email && touched.email ? "input-error" : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <Field
-                    type="password"
-                    name="password"
-                    id="password"
-                    className={
-                      errors.password && touched.password ? "input-error" : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="password"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-                <div className="form-button">
-                  <button
-                    type="submit"
-                    className={`btn btn-block ${
-                      !(dirty && isValid) ? "disabled-btn" : ""
-                    }`}
-                    disabled={!(dirty && isValid)}>
-                    Sign In
-                  </button>
-                </div>
-              </Form>
-            </div>
-          </>
-        );
-      }}
+      {({ handleSubmit, handleChange, values, errors }) => (
+        <>
+          <Container
+            className="w-25 d-flex flex-column justify-content-center align-items-center"
+            style={{
+              marginTop: "15rem",
+              padding: "3rem",
+              borderRadius: "1rem",
+              boxShadow: "0 0 1rem #000",
+            }}
+            fluid="md">
+            <div className="lead fs-3 my-2">Sign In</div>
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.email}
+            </Form.Control.Feedback>
+            <Form
+              noValidate
+              onSubmit={handleSubmit}
+              className="d-flex flex-column justify-content-center align-items-center">
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-4">Email</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Email"
+                  type="text"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-4 mt-2">
+                  Password
+                </Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+              <Form.Control.Feedback type="invalid" tooltip>
+                {errors.password}
+              </Form.Control.Feedback>
+              </Form.Group>
+              <Button className="mt-3" type="submit">
+                Submit form
+              </Button>
+            </Form>
+          </Container>
+        </>
+      )}
     </Formik>
   );
 }

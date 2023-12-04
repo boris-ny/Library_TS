@@ -14,6 +14,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./App.css";
 import Genres from "./pages/Genres/Genres";
 import GenreDetails from "./pages/Genres/GenreDetails";
+import BookCreate from "./pages/Books/BookCreate";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/authors" element={<Authors />} />
         <Route path="/books" element={<Books />} />
+        <Route path = "/books/create" element = {<BookCreate/>}/>
         <Route path="/book/:id" element={<Bookdetail />} />
         <Route path="/authors/:id" element={<AuthorDetail />} />
         <Route path="/bookinstances" element={<Bookinstances />} />

@@ -1,10 +1,14 @@
-import { FaUser } from "react-icons/fa";
-import { User } from "../types/common";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { User, Userlogin } from "../types/common";
+import Form from "react-bootstrap/Form";
+import * as formik from "formik";
+import { Container } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
+import { registerUser } from "../util/api";
 
 function Register() {
+  const { Formik } = formik;
   const initialValues: User = {
     email: "",
     firstName: "",
@@ -34,42 +38,11 @@ function Register() {
       .min(2, "Last name is too short - should be 2 chars minimum"),
   });
 
-  // const fetchUsers = async () => {
-  //   const response = await fetch("http://localhost:5000/users", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization:
-  //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInBlcm1pc3Npb25MZXZlbCI6MSwiaWF0IjoxNjk5OTY2NDY5LCJleHAiOjE3MDAzOTg0Njl9.8Ov8ThaaMAQKZcYyw2IO2lvOd9w0pZUGaJwurBIchGIn",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //     }).catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
-
-  const registerUser = async (data: User) => {
-    return await fetch("http://localhost:5000/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then((res) => res.json());
-  };
-
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={SignInSchema}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={(values: Userlogin, { resetForm }: any) => {
         registerUser(values)
           .then((data) => {
             console.log(data);
@@ -94,122 +67,112 @@ function Register() {
             });
           });
       }}>
-      {(formik) => {
-        const { errors, touched, isValid, dirty } = formik;
+      {({ handleSubmit, handleChange, values, errors }) => (
+        <>
+          <Container
+            className="w-25 d-flex flex-column justify-content-center align-items-center"
+            style={{
+              marginTop: "5rem",
+              padding: "3rem",
+              borderRadius: "1rem",
+              boxShadow: "0 0 1rem #000",
+            }}
+            fluid="md">
+            <div className="lead fs-3 my-2">Sign Up</div>
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.email}
+            </Form.Control.Feedback>
+            <Form
+              noValidate
+              onSubmit={handleSubmit}
+              className="d-flex flex-column justify-content-center align-items-center">
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-5">First Name</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="First Name"
+                  type="text"
+                  name="firstName"
+                  value={values.firstName}
+                  onChange={handleChange}
+                  isInvalid={!!errors.firstName}
+                />
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {errors.firstName}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-5">Last Name</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Last Name"
+                  type="text"
+                  name="lastName"
+                  value={values.lastName}
+                  onChange={handleChange}
+                  isInvalid={!!errors.lastName}
+                />
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {errors.lastName}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-5">Email</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Email"
+                  type="text"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-5 mt-2">
+                  Password
+                </Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+              <Form.Control.Feedback type="invalid" tooltip>
+                {errors.password}
+              </Form.Control.Feedback>
+              </Form.Group>
 
-        console.log(errors);
-
-        return (
-          <>
-            <div className="heading">
-              <FaUser />
-              Please 
-            </div>
-            <div className="form">
-              <Form>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <Field
-                    type="email"
-                    name="email"
-                    id="email"
-                    className={
-                      errors.email && touched.email ? "input-error" : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="name">First Name</label>
-                  <Field
-                    type="text"
-                    name="firstName"
-                    id="firstName"
-                    className={
-                      errors.firstName && touched.firstName
-                        ? "input-error"
-                        : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="firstName"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="name">Last Name</label>
-                  <Field
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    className={
-                      errors.lastName && touched.lastName ? "input-error" : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="lastName"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <Field
-                    type="password"
-                    name="password"
-                    id="password"
-                    className={
-                      errors.password && touched.password ? "input-error" : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="password"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="password">Confirm Password</label>
-                  <Field
-                    type="password"
-                    name="password2"
-                    id="password2"
-                    className={
-                      errors.password2 && touched.password2
-                        ? "input-error"
-                        : null
-                    }
-                  />
-                  <ErrorMessage
-                    name="password2"
-                    component="span"
-                    className="error"
-                  />
-                </div>
-                <div className="form-button">
-                  <button
-                    type="submit"
-                    className={`btn btn-block ${
-                      !(dirty && isValid) ? "disabled-btn" : ""
-                    }`}
-                    disabled={!(dirty && isValid)}>
-                    Sign up
-                  </button>
-                </div>
-              </Form>
-            </div>
-          </>
-        );
-      }}
+              <Form.Group controlId="validationFormik01">
+                <Form.Label className="text-center lead fs-5 mt-2">
+                  Confirm Password
+                </Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Confirm Password"
+                  name="password2"
+                  value={values.password2}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {errors.password2}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Button className="mt-3" type="submit">
+                Sign Up
+              </Button>
+            </Form>
+          </Container>
+        </>
+      )}
     </Formik>
   );
 }

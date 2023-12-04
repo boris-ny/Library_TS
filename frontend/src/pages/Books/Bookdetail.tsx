@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Book } from "../../types/common";
 import axios from "axios";
-import { Container } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Button, Container } from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Bookdetail = () => {
   const [bookdetail, setBookdetail] = React.useState<Book>({} as Book);
@@ -10,12 +11,12 @@ const Bookdetail = () => {
   const params = useParams<{ id: string }>();
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
-  const fetchBookdetail = async () => {
+  const fetchBookdetail = useCallback(async () => {
     if (!params.id) {
-      return;
+      return "Wrong ID";
     }
-
     try {
       const url = "http://localhost:5000/books/" + params.id;
       const response = await axios.get(url, {
@@ -24,15 +25,42 @@ const Bookdetail = () => {
         },
       });
       setBookdetail(response.data.data);
-    } catch (error:any) {
+    } catch (error: any) {
       const errorMessage = error?.response?.data?.message;
       return errorMessage;
     }
-  };
+  }, [params.id, token])
+
+  const deleteBook = useCallback(async () => {
+    if (!params.id) {
+      return "Wrong ID";
+    }
+    try {
+      const url = "http://localhost:5000/books/" + params.id;
+      await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      Swal.fire({
+        title: "Success!",
+        text: "You have successfully deleted the book!",
+        background: "#242424",
+        icon: "success",
+        timer: 10000,
+      });
+      navigate ("/books")
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message;
+      return errorMessage;
+    }
+  }, [navigate, params.id, token])
 
   React.useEffect(() => {
     fetchBookdetail();
-  });
+
+  },[]);
+
 
   return (
     <>
@@ -40,18 +68,28 @@ const Bookdetail = () => {
         <ul className="" key={bookdetail.id}>
           <h1>{bookdetail.title}</h1>
           <p>
-            <strong>Author</strong>: {bookdetail.authorId}
+            <strong>Author</strong> :{" "}
+            <Link
+              to={`/authors/${bookdetail.Author ? bookdetail.Author.id : ""}`}>
+              {bookdetail.Author
+                ? `${bookdetail.Author.first_name} ${bookdetail.Author.family_name}`
+                : ""}
+            </Link>
           </p>
           <p>
-            <strong>Summary</strong>: {bookdetail.summary}
+            <strong>Summary</strong> : {bookdetail.summary}
           </p>
           <p>
-            <strong>ISBN</strong>: {bookdetail.isbn}
+            <strong>ISBN</strong> : {bookdetail.isbn}
           </p>
           <p>
-            <strong>Genre</strong>: {bookdetail.Genre.name}
+            <strong>Genre</strong> :{" "}
+            {bookdetail.Genre ? bookdetail.Genre.name : ""}
           </p>
         </ul>
+        <Button variant="danger" onClick={deleteBook}>
+          Delete
+        </Button>
       </Container>
     </>
   );

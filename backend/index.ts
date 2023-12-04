@@ -29,7 +29,8 @@ app.use(cors());
 // Add routes
 app.use('/', indexRouter);
 // Add middleware to handle errors
-app.use(errors());app.use((_: Request, res: Response) => {
+app.use(errors());
+app.use((_: Request, res: Response) => {
   return res.status(500).send('Something broke!');
 });
 
