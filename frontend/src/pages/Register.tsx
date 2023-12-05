@@ -1,4 +1,4 @@
-import { User, Userlogin } from "../types/common";
+import { User} from "../types/common";
 import Form from "react-bootstrap/Form";
 import * as formik from "formik";
 import { Container } from "react-bootstrap";
@@ -42,10 +42,10 @@ function Register() {
     <Formik
       initialValues={initialValues}
       validationSchema={SignInSchema}
-      onSubmit={(values: Userlogin, { resetForm }: any) => {
+      onSubmit={(values: User, { resetForm }) => {
         registerUser(values)
-          .then((data) => {
-            console.log(data);
+          .then(( ) => {
+        
             Swal.fire({
               title: "Success!",
               text: "New user has been created!",
@@ -55,8 +55,7 @@ function Register() {
             });
             resetForm();
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
 
             Swal.fire({
               title: "Error!",
@@ -86,7 +85,7 @@ function Register() {
               noValidate
               onSubmit={handleSubmit}
               className="d-flex flex-column justify-content-center align-items-center">
-              <Form.Group controlId="validationFormik01">
+              <Form.Group controlId="validationFormik101">
                 <Form.Label className="text-center lead fs-5">First Name</Form.Label>
                 <Form.Control
                   required
@@ -101,7 +100,7 @@ function Register() {
                   {errors.firstName}
                 </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group controlId="validationFormik01">
+              <Form.Group controlId="validationFormik102">
                 <Form.Label className="text-center lead fs-5">Last Name</Form.Label>
                 <Form.Control
                   required
@@ -116,7 +115,7 @@ function Register() {
                   {errors.lastName}
                 </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group controlId="validationFormik01">
+              <Form.Group controlId="validationFormik103">
                 <Form.Label className="text-center lead fs-5">Email</Form.Label>
                 <Form.Control
                   required
@@ -143,13 +142,15 @@ function Register() {
                   value={values.password}
                   onChange={handleChange}
                   isInvalid={!!errors.email}
+                  autoComplete="on"
+                  
                 />
               <Form.Control.Feedback type="invalid" tooltip>
                 {errors.password}
               </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="validationFormik01">
+              <Form.Group controlId="validationFormik104">
                 <Form.Label className="text-center lead fs-5 mt-2">
                   Confirm Password
                 </Form.Label>
@@ -161,6 +162,7 @@ function Register() {
                   value={values.password2}
                   onChange={handleChange}
                   isInvalid={!!errors.email}
+                  autoComplete="on"
                 />
                 <Form.Control.Feedback type="invalid" tooltip>
                   {errors.password2}

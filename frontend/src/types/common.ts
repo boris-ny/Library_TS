@@ -17,9 +17,7 @@ export interface Book {
   authorId: number;
   summary: string;
   isbn: string;
-  Genre: any;
   genreId: number;
-  Author: any;
 
 }
 

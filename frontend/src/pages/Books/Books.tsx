@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-
+import EditButton from "../../assets/edit.svg"
+import Image from "react-bootstrap/Image";
 import "./Books.css";
 import { Link } from "react-router-dom";
-import { fetchBooksDetails } from "./BookService";
-
+import { fetchBooksDetails } from "../../util/api";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -40,10 +40,14 @@ const Books = () => {
             <div className="d-flex justify-content-between">
               <h1>Books</h1>
               <Button variant="primary" className="mb-3">
-                <Link to="/books/create" style={{
-                  color: "white",
-                  textDecoration: "none"
-                }}>Add new book</Link>
+                <Link
+                  to="/books/create"
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                  }}>
+                  Add new book
+                </Link>
               </Button>
             </div>
             <table className="table table-striped">
@@ -82,6 +86,11 @@ const Books = () => {
                         <Link to={`/genre/${book.Genre ? book.Genre.id : ""}`}>
                           {book.Genre ? book.Genre.name : "No genre"}
                         </Link>
+                      </td>
+                      <td>
+                        <Button variant="outline-secondary">
+                          <Image src={EditButton} />
+                        </Button>
                       </td>
                     </tr>
                   );

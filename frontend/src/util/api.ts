@@ -1,19 +1,10 @@
-import { Userlogin } from "../types/common";
+import { User, Userlogin, Book } from "../types/common";
 import axios from "axios";
 
 const url = import.meta.env.VITE_DB_URL;
 
-// const registerUser = async (data: User) => {
-//   return await fetch("http://localhost:5000/users", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   }).then((res) => res.json());
-// };
-
-export const registerUser = async (data: Userlogin) => {
+// call api to register user
+export const registerUser = async (data: User) => {
   return await axios
     .post(`${url}/users`, data, {
       headers: {
@@ -23,6 +14,7 @@ export const registerUser = async (data: Userlogin) => {
     .then((res) => res.data);
 };
 
+// call api to login user
 export const loginUser = async (data: Userlogin) => {
   return await axios
     .post(`${url}/auth`, data, {
@@ -31,4 +23,35 @@ export const loginUser = async (data: Userlogin) => {
       },
     })
     .then((res) => res.data);
+};
+// call api to get all books
+export const fetchBooksDetails = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(`${url}/books`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data: response.data.data };
+  } catch (error: any) {
+    return {
+      error:
+        error?.response?.data?.message ??
+        error.message ??
+        "Something went wrong",
+    };
+  }
+};
+// call api to create book
+export const createBook = async (data: Book) => {
+  const token = localStorage.getItem("token");
+  return await axios
+    .post(`${url}/books`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.data);
 };

@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Book } from "../../types/common";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import axios from "axios";
+import * as formik from "formik";
 import { Container } from "react-bootstrap";
 import { fetchAuthorsDetails } from "../Authors/AuthorsService";
 import { fetchGenresDetails } from "../Genres/GenresServices";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { createBook } from "../../util/api";
 
 const BookCreate = () => {
+  const { Formik } = formik;
   const initialValues: Book = {
     title: "",
-    Author: "",
+    authorId: 0,
     summary: "",
     isbn: "",
-    Genre: "",
+    genreId: 0,
+    
   };
   const [authors, setAuthors] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -37,166 +39,144 @@ const BookCreate = () => {
   }, []);
   const navigate = useNavigate();
 
-  // Create Book Service
-  const createBook = async (data: any) => {
-    try {
-      const url = "http://localhost:5000/books";
-      const token = localStorage.getItem("token");
-
-      await axios
-        .post(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-
-          data: JSON.stringify(data),
-        })
-        .then(() => {
-          Swal.fire({
-            title: "Success!",
-            text: "You have successfully created a new book!",
-            background: "#242424",
-            icon: "success",
-            timer: 10000,
-          });
-          navigate("/books");
-        });
-    } catch (error) {
-      Swal.fire({
-        title: "Error!",
-        text: "Something went wrong! Please try again.",
-        background: "#242424",
-        icon: "error",
-        timer: 10000,
-      });
-    }
-  };
-  const SignInSchema = Yup.object().shape({
-    email: Yup.string().email().required("Email is required"),
-
-    password: Yup.string()
-      .required("Password is required")
-      .min(4, "Password is too short - should be 4 chars minimum"),
+  const BookSchema = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    summary: Yup.string().required("Summary is required"),
+    genreId: Yup.string().required("Author is required"),
+    isbn: Yup.string().required("ISBN is required"),
+    authorId: Yup.string().required("Genre is required"),
   });
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values) => {
-        createBook(values);
+      validationSchema={BookSchema}
+      onSubmit={(values: Book, { resetForm }) => {
+        console.log(values);
+        
+        createBook(values)
+          .then(() => {
+            localStorage.getItem("token");
+
+            Swal.fire({
+              title: "Success!",
+              text: "You have successfully created a new book!",
+              background: "#242424",
+              icon: "success",
+              timer: 10000,
+            });
+            resetForm();
+            navigate("/books");
+          })
+          .catch((err) => {
+            console.log(err);
+
+            Swal.fire({
+              title: "Error!",
+              text: "Something went wrong! Please try again.",
+              background: "#242424",
+              icon: "error",
+              timer: 10000,
+            });
+          });
       }}>
-      {(formik) => {
-        const { errors, touched } = formik;
-
-        return (
-          <>
-            <div className="fs-3 d-flex justify-content-center">
-              Add a new Book
+      {({ handleSubmit, handleChange, values, errors }) => (
+        <>
+          <Container className="d-flex justify-content-between align-items-center flex-column">
+            <div className="mt-5">
+              <h1>Add new book</h1>
             </div>
-            <Form className="mt-2">
-              <Container className="w-25">
-                <Field
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="title">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  type="text"
                   name="title"
-                  render={({ field }) => (
-                    <Form.Group className="mb-3">
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
-                        type={"text"}
-                        value={field.title}
-                        onChange={field.onChange}
-                        placeholder="Add new Book"
-                        className={
-                          errors.title && touched.title ? "input-error" : ""
-                        }
-                      />
-                    </Form.Group>
-                  )}
+                  placeholder="Enter title"
+                  value={values.title}
+                  onChange={handleChange}
+                  isInvalid={!!errors.title}
                 />
-                <Field
-                  name="Author"
-                  render={({ field }) => (
-                    <Form.Group className="mb-3">
-                      <Form.Label>Author Name</Form.Label>
-                      <Form.Select
-                        value={field.Author}
-                        onChange={field.onChange}>
-                        {authors.map((author: any) => (
-                          <option key={author.id}>
-                            <div>
-                              {author.first_name} {author.family_name}
-                            </div>
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  )}
-                />
-
-                <Field
+                <Form.Control.Feedback type="invalid">
+                  {errors.title}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="summary">
+                <Form.Label>Summary</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
                   name="summary"
-                  render={({ field }) => (
-                    <Form.Group
-                      className="mb-3"
-                      controlId="exampleForm.ControlTextarea1">
-                      <Form.Label>Summary</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        value={field.title}
-                        onChange={field.onChange}
-                        rows={3}
-                        placeholder="Summary of the Book"
-                        className={
-                          errors.summary && touched.summary ? "input-error" : ""
-                        }
-                      />
-                    </Form.Group>
-                  )}
+                  placeholder="Enter summary"
+                  value={values.summary}
+                  onChange={handleChange}
+                  isInvalid={!!errors.summary}
                 />
-                <Field
+                <Form.Control.Feedback type="invalid">
+                  {errors.summary}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="author">
+                <Form.Label>Author</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="authorId"
+                  onChange={handleChange}
+                  isInvalid={!!errors.authorId}>
+                  <option value="">Select author</option>
+                  {authors.map((author: any) => (
+                    <option key={author.id} value={author.id}>
+                      {author.first_name} {author.family_name}
+                    </option>
+                  ))}
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {errors.authorId}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="isbn">
+                <Form.Label>ISBN</Form.Label>
+                <Form.Control
+                  type="text"
                   name="isbn"
-                  render={({ field }) => (
-                    <Form.Group className="mb-3">
-                      <Form.Label>ISBN</Form.Label>
-                      <Form.Control
-                        type={"text"}
-                        value={field.isbn}
-                        onChange={field.onChange}
-                        placeholder="ISBN of the Book"
-                        className={
-                          errors.isbn && touched.isbn ? "input-error" : ""
-                        }
-                      />
-                    </Form.Group>
-                  )}
+                  placeholder="Enter ISBN"
+                  value={values.isbn}
+                  onChange={handleChange}
+                  isInvalid={!!errors.isbn}
                 />
-                <Field
-                  name="Genre"
-                  render={({ field }) => (
-                    <Form.Group className="mb-3">
-                      <Form.Label>Genre</Form.Label>
-                      <Form.Select
-                        value={field.Genre}
-                        onChange={field.onChange}>
-                        {genres.map((genre: any) => (
-                          <option key={genre.id}>
-                            <div>{genre.name}</div>
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  )}
-                />
-              </Container>
-              <Container className="d-flex justify-content-center">
-                <Button variant="primary" type="submit">
-                  <span className="p-5 fs-4">Submit</span>
-                </Button>
-              </Container>
+                <Form.Control.Feedback type="invalid">
+                  {errors.isbn}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="genre">
+                <Form.Label>Genre</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="genreId"
+                  onChange={handleChange}
+                  isInvalid={!!errors.genreId}>
+                  <option value="">Select genre</option>
+                  {genres.map((genre: any) => (
+                    <option value={genre.id} key={genre.id}>
+                      {genre.name}
+                    </option>
+                  ))}
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {errors.genreId}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Button
+                size="lg"
+                className="mt-4 px-5"
+                variant="primary"
+                type="submit">
+                Submit
+              </Button>
             </Form>
-          </>
-        );
-      }}
+          </Container>
+        </>
+      )}
     </Formik>
   );
 };
