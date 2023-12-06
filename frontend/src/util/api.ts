@@ -1,3 +1,4 @@
+
 import { User, Userlogin, Book } from "../types/common";
 import axios from "axios";
 
@@ -49,6 +50,18 @@ export const createBook = async (data: Book) => {
   const token = localStorage.getItem("token");
   return await axios
     .post(`${url}/books`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.data);
+};
+// call api to update book
+export const UpdateBook = async (data: Book, id:number) => {
+  
+  const token = localStorage.getItem("token");
+  return await axios
+    .put(`${url}/books/${id}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

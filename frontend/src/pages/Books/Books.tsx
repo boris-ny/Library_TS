@@ -1,16 +1,49 @@
 import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import EditButton from "../../assets/edit.svg"
+import EditButton from "../../assets/edit.svg";
 import Image from "react-bootstrap/Image";
-import "./Books.css";
 import { Link } from "react-router-dom";
-import { fetchBooksDetails } from "../../util/api";
+import { fetchBooksDetails, UpdateBook } from "../../util/api";
+import { Book } from "../../types/common";
+import BookUpdateModal from "../../components/BookUpdateModal";
+import Swal from "sweetalert2";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [currentBook, setCurrentBook] = useState<Book>();
 
+  const handleClose = () => setShow(false);
+
+  const handleSubmit = (values: Book, { resetForm }) => {
+    if (currentBook && currentBook.id) {
+      UpdateBook(values, currentBook.id)
+        .then(() => {
+          localStorage.getItem("token");
+          Swal.fire({
+            title: "Success!",
+            text: "Book has been updated.",
+            icon: "success",
+            confirmButtonText: "Ok",
+          });
+          resetForm({});
+          setShow(false);
+        })
+        .catch((error) => {
+          console.log(error);
+
+          Swal.fire({
+            title: "Error!",
+            text: error.message,
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+        });
+    }
+    
+  };
   useEffect(() => {
     setIsLoading(true);
     fetchBooksDetails().then((res) => {
@@ -88,13 +121,27 @@ const Books = () => {
                         </Link>
                       </td>
                       <td>
-                        <Button variant="outline-secondary">
+                        <Button
+                          variant="outline-secondary"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShow(true);
+                            setCurrentBook(book);
+                          }}>
                           <Image src={EditButton} />
                         </Button>
                       </td>
                     </tr>
                   );
                 })}
+                {currentBook && (
+                  <BookUpdateModal
+                    show={show}
+                    handleClose={handleClose}
+                    book={currentBook}
+                    onSubmit={handleSubmit}
+                  />
+                )}
               </tbody>
             </table>
           </div>
