@@ -38,6 +38,7 @@ export const GenreDetails = () => {
             {genreDetail.Books &&
               genreDetail.Books.map((book: any) => (
                 <div key={book.id}>
+                  
                   <Link to={`/book/${book.id}`}>
                     {book.title}
                   </Link>

@@ -23,8 +23,12 @@ export const loginUser = async (data: Userlogin) => {
         "Content-Type": "application/json",
       },
     })
-    .then((res) => res.data);
+    .then((res) => res.data.data);
 };
+
+// call api to get user details
+
+
 // call api to get all books
 export const fetchBooksDetails = async () => {
   try {

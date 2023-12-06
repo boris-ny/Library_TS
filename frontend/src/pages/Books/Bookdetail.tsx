@@ -70,7 +70,7 @@ const Bookdetail = () => {
           <p>
             <strong>Author</strong> :{" "}
             <Link
-              to={`/authors/${bookdetail.Author ? bookdetail.Author.id : ""}`}>
+              to={`/authors/${bookdetail.Author ? bookdetail.Author.id: ""}`}>
               {bookdetail.Author
                 ? `${bookdetail.Author.first_name} ${bookdetail.Author.family_name}`
                 : ""}

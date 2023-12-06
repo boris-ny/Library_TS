@@ -15,14 +15,17 @@ import "./App.css";
 import Genres from "./pages/Genres/Genres";
 import GenreDetails from "./pages/Genres/GenreDetails";
 import BookCreate from "./pages/Books/BookCreate";
+import HeaderUserName from "./components/HeaderUserName";
 
 function App() {
   return (
     <>
       <Headerbar />
       <Routes>
+        <Route path ="users/:id" element={<HeaderUserName/>} />
         <Route index path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
         <Route path="/authors" element={<Authors />} />
         <Route path="/books" element={<Books />} />

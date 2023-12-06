@@ -12,6 +12,8 @@ export interface Userlogin {
 }
 
 export interface Book {
+  Genre?: string | any;
+  Author?: string | any;
   id?: number,
   title: string;
   authorId: number;

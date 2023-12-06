@@ -1,37 +1,36 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+/* eslint-disable react-hooks/exhaustive-deps */
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
+import { Button } from "react-bootstrap";
+
+import React from "react";
+import HeaderUserName from "./HeaderUserName";
 
 const HeaderBar: React.FC = () => {
-  
+  const [openUserOptions, setOpenUserOptions] = useState(false);
+
+  function openUser() {
+    setOpenUserOptions(!openUserOptions);
+  }
+
+  const navigate = useNavigate();
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
 
   return (
-    // <header className="header">
-    //   <div className="logo">
-    //     <Link to="/">LOCAL LIBRARY</Link>
-    //   </div>
-    //   <ul>
-    //     <li>
-    //       <Link to="/login">
-    //         <FaSignInAlt /> Login
-    //       </Link>
-    //     </li>
-    //     <li>
-    //       <Link to="/register">
-    //         <FaUser /> Register
-    //       </Link>
-    //     </li>
-    //   </ul>
-    // </header>
-
     <>
-      <Navbar
-        bg="dark"
-        data-bs-theme="dark"
-        className="fs-5">
-        <Container>
-          <Navbar.Brand href="/" style={{ fontWeight: "bold" }}>
+      <Navbar bg="dark" data-bs-theme="dark" className="fs-5">
+        <Container fluid>
+          <Navbar.Brand
+            className="ps-5 fs-4"
+            href="/"
+            style={{ fontWeight: "bold" }}>
             Local Library
           </Navbar.Brand>
           <Nav>
@@ -39,16 +38,37 @@ const HeaderBar: React.FC = () => {
             <Nav.Link href="/authors">All Authors</Nav.Link>
             <Nav.Link href="/bookinstances">All BookInstances</Nav.Link>
             <Nav.Link href="/genres">All Genres</Nav.Link>
-            <div className="d-flex justify-content-evenly">
-              <Nav.Link href="/login">Login</Nav.Link>
-              <Nav.Link href="/register">Register</Nav.Link>
-            </div>
+            {localStorage.getItem("token") ? (
+              <Nav.Link
+                style={{
+                  position: "relative",
+                }}>
+                <div>
+                  <HeaderUserName onClick={openUser} />
+                </div>
+                {openUserOptions && (
+                  <div>
+                    <Button
+                      variant="danger"
+                      className="mt-2"
+                      style={{
+                        position: "absolute",
+                        right: "0px",
+                      }}
+                      onClick={handleLogout}>
+                      Logout
+                    </Button>
+                  </div>
+                )}
+              </Nav.Link>
+            ) : (
+              <Navigate to="/login" />
+            )}
           </Nav>
         </Container>
       </Navbar>
     </>
   );
-  }  
-
+};
 
 export default HeaderBar;
