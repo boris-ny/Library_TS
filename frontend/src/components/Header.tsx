@@ -35,7 +35,7 @@ const HeaderBar = () => {
             <Nav.Link href="/authors">All Authors</Nav.Link>
             <Nav.Link href="/bookinstances">All BookInstances</Nav.Link>
             <Nav.Link href="/genres">All Genres</Nav.Link>
-            {localStorage.getItem("token") ? (
+           
               <Nav.Link
                 style={{
                   position: "relative",
@@ -58,13 +58,7 @@ const HeaderBar = () => {
                   </div>
                 )}
               </Nav.Link>
-            ) : (
-                //? Fix this Navigation to register or login 
-              <>
-                <Navigate to="/login" />
-                <Navigate to="/register" />
-              </>
-            )}
+           
           </Nav>
         </Container>
       </Navbar>
