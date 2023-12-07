@@ -1,5 +1,5 @@
 import * as formik from "formik";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Userlogin } from "../types/common";
 import { loginUser } from "../util/api";
 import * as Yup from "yup";
@@ -34,6 +34,7 @@ function Login() {
           .then((data) => {
             const token = data.accessToken;
             localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(data.user));
 
             Swal.fire({
               title: "Success!",
@@ -42,7 +43,7 @@ function Login() {
               icon: "success",
               timer: 10000,
             });
-
+             
             navigate("/");
           })
           .catch((err) => {
@@ -107,9 +108,10 @@ function Login() {
               </Form.Control.Feedback>
               </Form.Group>
               <Button className="mt-3" type="submit">
-                Submit form
+                Login
               </Button>
             </Form>
+            <Link to={'/register'}>Register</Link>
           </Container>
         </>
       )}

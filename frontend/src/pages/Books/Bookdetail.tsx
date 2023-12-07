@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback } from "react";
 import { Book } from "../../types/common";
 import axios from "axios";
@@ -36,7 +37,7 @@ const Bookdetail = () => {
       return "Wrong ID";
     }
     try {
-      const url = "http://localhost:5000/books/" + params.id;
+      const url = `${import.meta.env.VITE_DB_URL}/books/` + params.id;
       await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,7 +53,7 @@ const Bookdetail = () => {
       navigate ("/books")
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message;
-      return errorMessage;
+      alert(errorMessage);
     }
   }, [navigate, params.id, token])
 
@@ -65,10 +66,10 @@ const Bookdetail = () => {
   return (
     <>
       <Container className="fs-5 mt-5">
-        <ul className="" key={bookdetail.id}>
+        <ul key={bookdetail.id}>
           <h1>{bookdetail.title}</h1>
           <p>
-            <strong>Author</strong> :{" "}
+            <strong>Author</strong> :
             <Link
               to={`/authors/${bookdetail.Author ? bookdetail.Author.id: ""}`}>
               {bookdetail.Author
@@ -83,7 +84,7 @@ const Bookdetail = () => {
             <strong>ISBN</strong> : {bookdetail.isbn}
           </p>
           <p>
-            <strong>Genre</strong> :{" "}
+            <strong>Genre</strong> :
             {bookdetail.Genre ? bookdetail.Genre.name : ""}
           </p>
         </ul>

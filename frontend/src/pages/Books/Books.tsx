@@ -32,8 +32,6 @@ const Books = () => {
           setShow(false);
         })
         .catch((error) => {
-          console.log(error);
-
           Swal.fire({
             title: "Error!",
             text: error.message,
@@ -42,7 +40,6 @@ const Books = () => {
           });
         });
     }
-    
   };
   useEffect(() => {
     setIsLoading(true);

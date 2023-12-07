@@ -1,5 +1,5 @@
 
-import { User, Userlogin, Book } from "../types/common";
+import { User, Userlogin, Book, Author } from "../types/common";
 import axios from "axios";
 
 const url = import.meta.env.VITE_DB_URL;
@@ -23,9 +23,9 @@ export const loginUser = async (data: Userlogin) => {
         "Content-Type": "application/json",
       },
     })
-    .then((res) => res.data.data);
-};
-
+    .then((res) => res.data);
+  };
+ 
 // call api to get user details
 
 
@@ -72,3 +72,16 @@ export const UpdateBook = async (data: Book, id:number) => {
     })
     .then((res) => res.data.data);
 };
+
+// create new author api
+export const createAuthor = async (data: Author ) => {
+  const token = localStorage.getItem("token");
+  return await axios
+    .post(`${url}/authors`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.data);
+};
+

@@ -73,7 +73,7 @@ function Dashboard() {
               loading="lazy"
               src={LocalImage}
               fluid
-              style={{ maxHeight: "93vh", width: "150%" }}
+              style={{ maxHeight: "94vh", width: "150%" }}
               width={"auto"}
             />
           </Col>

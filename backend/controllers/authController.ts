@@ -17,8 +17,8 @@ export const login = async (req: Request, res: Response) => {
         message: "Invalid email or password",
       });
     }
-    console.log(req.body.password , user.password);
-    
+    console.log(req.body.password, user.password);
+
     const passwordIsValid = await bcrypt.compare(
       req.body.password,
       user.password
@@ -44,7 +44,15 @@ export const login = async (req: Request, res: Response) => {
 
     return res
       .status(201)
-      .json({ accessToken: token, refreshToken: refresh_token });
+      .json({
+        accessToken: token,
+        refreshToken: refresh_token,
+        user: {
+          id: user.id,
+          firstname: user.firstName,
+          permission: user.permissionLevel,
+        },
+      });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Users Error" });

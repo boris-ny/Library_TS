@@ -98,7 +98,7 @@ export const createAuthor = async (
       data: author,
     });
   } catch (err: unknown) {
-    return res.status(500).json({ message: "intern" });
+    return res.status(500).json({ message: "Internal error" });
   }
 };
 

@@ -5,6 +5,7 @@ import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 
 interface User {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -20,8 +21,10 @@ const HeaderUserName = (props) => {
   const fetchUserDetails = useCallback(async () => {
     const url = import.meta.env.VITE_DB_URL;
     const token = localStorage.getItem("token");
+   const userId = JSON.parse(localStorage.getItem("user")|| "");
+
     try {
-      const response = await axios.get(`${url}/users/${params.id}`, {
+      const response = await axios.get(`${url}/users/${userId.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -34,22 +37,20 @@ const HeaderUserName = (props) => {
   React.useEffect(() => {
     fetchUserDetails();
   }, []);
-  console.log(user);
+  
 
   return (
     <>
-      <div
-        style={{
-          color: "white",
-        }}>
-        {user?.firstName}
+      <div className="d-flex" onClick={props.onClick}>
+        <div
+          className="mx-1"
+          style={{
+            color: "white",
+          }}>
+          {user?.firstName}
+        </div>
+        <Icon fontSize={30} color="white" icon="mingcute:user-4-fill" />
       </div>
-      <Icon
-        fontSize={30}
-        color="white"
-        icon="mingcute:user-4-fill"
-        onClick={props.onClick}
-      />
     </>
   );
 };

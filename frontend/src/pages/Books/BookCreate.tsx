@@ -64,11 +64,9 @@ const BookCreate = () => {
           navigate("/books");
         })
         .catch((err) => {
-          console.log(err);
-
           Swal.fire({
             title: "Error!",
-            text: "Something went wrong! Please try again.",
+            text: `Something went wrong! Please try again. ${err.message}`,
             background: "#242424",
             icon: "error",
             timer: 10000,

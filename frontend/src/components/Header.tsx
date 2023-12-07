@@ -4,13 +4,10 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-
 import { Button } from "react-bootstrap";
-
-import React from "react";
 import HeaderUserName from "./HeaderUserName";
 
-const HeaderBar: React.FC = () => {
+const HeaderBar = () => {
   const [openUserOptions, setOpenUserOptions] = useState(false);
 
   function openUser() {
@@ -62,7 +59,11 @@ const HeaderBar: React.FC = () => {
                 )}
               </Nav.Link>
             ) : (
-              <Navigate to="/login" />
+                //? Fix this Navigation to register or login 
+              <>
+                <Navigate to="/login" />
+                <Navigate to="/register" />
+              </>
             )}
           </Nav>
         </Container>

@@ -1,17 +1,48 @@
 import React, { useState } from "react";
 import { fetchAuthorsDetails } from "./AuthorsService";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import AuthorCreateModal from "../../components/AuthorCreateModal";
+import { createAuthor } from "../../util/api";
+import Swal from "sweetalert2";
+import { Author } from "../../types/common";
 
 function Authors() {
   const [authors, setAuthors] = useState([]);
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [newAuthor, setNewAuthor] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+
+  const handleSubmit = (values: Author, { resetForm }) => {
+    createAuthor(values)
+      .then(() => {
+        Swal.fire({
+          title: "Success!",
+          text: "You have successfully created a new author!",
+          background: "#242424",
+          icon: "success",
+          timer: 10000,
+        });
+        resetForm();
+        setShow(false);
+        console.log("values", values);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      });
+  };
 
   React.useEffect(() => {
     setIsLoading(true);
     fetchAuthorsDetails().then((res) => {
-      console.log(res);
       if (res.data) {
         setAuthors(res.data);
       }
@@ -33,20 +64,40 @@ function Authors() {
   return (
     <>
       <Container>
-        <div className="mt-5">
-          <h1>Authors</h1>
+        <div className="mt-5 d-flex mb-4 justify-content-between ">
+          <h1 className="mx-4">Authors</h1>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setShow(true);
+              setNewAuthor(true);
+            }}>
+            Add new Author
+          </Button>
+          {newAuthor && (
+            <AuthorCreateModal
+              show={show}
+              handleClose={handleClose}
+              onSubmit={handleSubmit}
+            />
+          )}
         </div>
         <ol className="fs-5">
           {authors.map((author: any) => (
             <li key={author.id}>
-              <Link to={`/authors/${author.id}`}>
-                {author.first_name} {author.family_name}
-              </Link>
-              
-              <span className="ms-2">
-        
-                : ({author.date_of_birth} - {author.date_of_death})
-              </span>
+              <div className="mt-2">
+                <Link
+                  to={`/authors/${author.id}`}
+                  style={{
+                    textDecoration: "underlined",
+                    color: "black",
+                    
+                  }}>
+                  <div style={{ color: "black" }}>
+                    {author.first_name} {author.family_name}
+                  </div>
+                </Link>
+              </div>
             </li>
           ))}
         </ol>
