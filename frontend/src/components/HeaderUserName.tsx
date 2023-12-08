@@ -2,20 +2,15 @@
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import React, { useCallback, useState } from "react";
-import { useParams } from "react-router-dom";
 
 interface User {
   id: string;
   firstName: string;
   lastName: string;
-  email: string;
-  password: string;
-  status: string;
-  role: string;
 }
 
-const HeaderUserName = (props) => {
-  const params = useParams<{ id: string }>();
+const HeaderUserName = (props: { onClick: React.MouseEventHandler<HTMLDivElement> | undefined; }) => {
+  
   const [user, setUser] = useState<User>({} as User);
 
   const fetchUserDetails = useCallback(async () => {
@@ -33,11 +28,12 @@ const HeaderUserName = (props) => {
     } catch (error: any) {
       return error?.response?.data?.message;
     }
-  }, [params.id]);
+  }, []);
   React.useEffect(() => {
     fetchUserDetails();
   }, []);
-  
+   
+    
 
   return (
     <>
@@ -47,7 +43,7 @@ const HeaderUserName = (props) => {
           style={{
             color: "white",
           }}>
-          {user?.firstName}
+          {user.firstName}
         </div>
         <Icon fontSize={30} color="white" icon="mingcute:user-4-fill" />
       </div>

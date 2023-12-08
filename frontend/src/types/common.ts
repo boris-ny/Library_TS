@@ -37,3 +37,7 @@ export interface ServiceError extends Error {
     };
   };
 }
+
+export interface IGuardProps extends React.PropsWithChildren {
+  requiredRoles: string[];
+}

@@ -6,6 +6,7 @@ import AuthorCreateModal from "../../components/AuthorCreateModal";
 import { createAuthor } from "../../util/api";
 import Swal from "sweetalert2";
 import { Author } from "../../types/common";
+import Headerbar from "../../components/Header";
 
 function Authors() {
   const [authors, setAuthors] = useState([]);
@@ -63,6 +64,7 @@ function Authors() {
 
   return (
     <>
+      <Headerbar />
       <Container>
         <div className="mt-5 d-flex mb-4 justify-content-between ">
           <h1 className="mx-4">Authors</h1>
@@ -91,7 +93,6 @@ function Authors() {
                   style={{
                     textDecoration: "underlined",
                     color: "black",
-                    
                   }}>
                   <div style={{ color: "black" }}>
                     {author.first_name} {author.family_name}

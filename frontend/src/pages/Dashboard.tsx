@@ -7,6 +7,7 @@ import { fetchGenresDetails } from "./Genres/GenresServices";
 import { fetchAuthorsDetails } from "./Authors/AuthorsService";
 import { fetchBookinstancesDetails } from "./Bookinstances/BookinstancesService";
 import { Row, Col } from "react-bootstrap";
+import Headerbar from "../components/Header";
 
 function Dashboard() {
   const [books, setBooks] = useState([]);
@@ -34,6 +35,7 @@ function Dashboard() {
 
   return (
     <>
+      <Headerbar />
       <Container style={{
         maxWidth: "100%",
       }}>

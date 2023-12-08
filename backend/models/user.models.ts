@@ -48,7 +48,7 @@ User.init(
     permissionLevel: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: PermissionLevel.GUEST,
+      defaultValue: PermissionLevel.USER,
     },
   },
   {
