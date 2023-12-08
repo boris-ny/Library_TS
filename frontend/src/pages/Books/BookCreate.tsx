@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Headerbar from "../../components/Header";
 import * as Yup from "yup";
 import { Book } from "../../types/common";
 import Button from "react-bootstrap/Button";
@@ -77,6 +78,7 @@ const BookCreate = () => {
 
   return (
     <>
+      <Headerbar />
       <Container className="d-flex justify-content-between align-items-center flex-column">
         <div className="mt-5">
           <h1>Add new book</h1>

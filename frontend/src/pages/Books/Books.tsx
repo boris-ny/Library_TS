@@ -7,7 +7,7 @@ import { fetchBooksDetails, UpdateBook } from "../../util/api";
 import { Book } from "../../types/common";
 import BookUpdateModal from "../../components/BookUpdateModal";
 import Swal from "sweetalert2";
-
+import Headerbar from "../../components/Header";
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState();
@@ -64,6 +64,7 @@ const Books = () => {
 
   return (
     <>
+      <Headerbar />
       <Container>
         <div>
           <div className="mt-3">

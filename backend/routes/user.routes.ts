@@ -31,7 +31,7 @@ router
    */
   .all(
     authcontroller.validJWTNeeded,
-    authcontroller.permissionLevelRequired([PermissionLevel.ADMIN])
+    authcontroller.permissionLevelRequired([PermissionLevel.ADMIN, PermissionLevel.USER])
   )
   /**
    * Route handler to get a user by ID.

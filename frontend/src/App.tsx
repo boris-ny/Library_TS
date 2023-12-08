@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import Headerbar from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,17 +15,18 @@ import GenreDetails from "./pages/Genres/GenreDetails";
 import BookCreate from "./pages/Books/BookCreate";
 import PrivateRoutes from "./pages/PrivateRoutes";
 import PublicRoutes from "./pages/PublicRoutes";
+import ErrorPage from "./pages/error-page";
 
 function App() {
   return (
     <>
-      <Headerbar />
       <Routes>
-        <Route element={<PublicRoutes />}>
-          <Route path="login" element={<Login />} />
+        <Route element={<PublicRoutes />} errorElement={<ErrorPage />}>
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
-        <Route element={<PrivateRoutes />}>
+    
+        <Route element={<PrivateRoutes />} errorElement={<ErrorPage />}>
           <Route index path="/" element={<Dashboard />} />
           <Route path="/authors" element={<Authors />} />
           <Route path="/books" element={<Books />} />

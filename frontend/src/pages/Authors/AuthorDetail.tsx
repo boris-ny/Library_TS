@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import Headerbar from "../../components/Header";
 import React from "react";
 import { Button, Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -67,6 +67,7 @@ const AuthorDetail = () => {
 
   return (
     <>
+      <Headerbar />
       <Container className="fs-5 mt-5">
         <ul
           style={{
