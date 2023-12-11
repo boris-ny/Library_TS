@@ -16,28 +16,33 @@ import BookCreate from "./pages/Books/BookCreate";
 import PrivateRoutes from "./pages/PrivateRoutes";
 import PublicRoutes from "./pages/PublicRoutes";
 import ErrorPage from "./pages/error-page";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route element={<PublicRoutes />} errorElement={<ErrorPage />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
-    
-        <Route element={<PrivateRoutes />} errorElement={<ErrorPage />}>
-          <Route index path="/" element={<Dashboard />} />
-          <Route path="/authors" element={<Authors />} />
-          <Route path="/books" element={<Books />} />
-          <Route path="/books/create" element={<BookCreate />} />
-          <Route path="/book/:id" element={<Bookdetail />} />
-          <Route path="/authors/:id" element={<AuthorDetail />} />
-          <Route path="/bookinstances" element={<Bookinstances />} />
-          <Route path="/genres" element={<Genres />} />
-          <Route path="/genre/:id" element={<GenreDetails />} />
-        </Route>
-      </Routes>
+      <QueryClientProvider client={queryClient}>
+        <Routes>
+          <Route element={<PublicRoutes />} errorElement={<ErrorPage />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+
+          <Route element={<PrivateRoutes />} errorElement={<ErrorPage />}>
+            <Route index path="/" element={<Dashboard />} />
+            <Route path="/authors" element={<Authors />} />
+            <Route path="/books" element={<Books />} />
+            <Route path="/books/create" element={<BookCreate />} />
+            <Route path="/book/:id" element={<Bookdetail />} />
+            <Route path="/authors/:id" element={<AuthorDetail />} />
+            <Route path="/bookinstances" element={<Bookinstances />} />
+            <Route path="/genres" element={<Genres />} />
+            <Route path="/genre/:id" element={<GenreDetails />} />
+          </Route>
+        </Routes>
+      </QueryClientProvider>
     </>
   );
 }

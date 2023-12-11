@@ -20,7 +20,7 @@ const Bookdetail = () => {
       return "Wrong ID";
     }
     try {
-      const url = "http://localhost:5000/books/" + params.id;
+      const url = `${import.meta.env.VITE_DB_URL}/books/` + params.id;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,7 +60,6 @@ const Bookdetail = () => {
 
   React.useEffect(() => {
     fetchBookdetail();
-    deleteBook();
   }, []);
 
   return (

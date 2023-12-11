@@ -66,5 +66,6 @@ BookInstance.init(
 );
 
 BookInstance.belongsTo(Book, { foreignKey: "book_id" });
+Book.hasMany(BookInstance, { foreignKey: "book_id" });
 
 export default BookInstance;

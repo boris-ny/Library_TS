@@ -41,9 +41,9 @@ const BookCreate = () => {
   const BookSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
     summary: Yup.string().required("Summary is required"),
-    genreId: Yup.string().required("Author is required"),
+    genreId: Yup.string().required("Genre is required"),
     isbn: Yup.string().required("ISBN is required"),
-    authorId: Yup.string().required("Genre is required"),
+    authorId: Yup.string().required("Author is required"),
   });
 
   const { values, errors, handleChange, handleSubmit } = formik.useFormik({

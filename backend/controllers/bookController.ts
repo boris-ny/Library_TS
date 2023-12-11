@@ -11,7 +11,7 @@ export const getAllBooks = async (_req: Request, res: Response) => {
     const books = await Book.findAll({
       include: [
         { model: Genre},
-        { model: Author},
+        // { model: Author},
       ],
     });
     return res.json({

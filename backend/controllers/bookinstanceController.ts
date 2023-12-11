@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { celebrate, Joi, Segments } from "celebrate";
 import BookInstance from "../models/bookinstance.models";
+import Book from "../models/book.models";
 
 /**
  * Retrieves all book instances from the database.
@@ -16,7 +17,7 @@ export const getAllBookInstances = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const bookinstances = await BookInstance.findAll();
+    const bookinstances = await BookInstance.findAll({include: [{ model: Book }]});
     return res.json({
       status: 200,
       message: "success",
@@ -43,7 +44,10 @@ export const getBookInstanceById = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const bookinstance = await BookInstance.findByPk(req.params.bookinstanceId);
+    const bookinstance = await BookInstance.findOne({
+      where: { id: req.params.bookinstanceId },
+      include: [{ model: Book }],
+    });
 
     if (!bookinstance) {
       return res.status(404).json({
@@ -143,7 +147,10 @@ export const updateBookInstance = async (req: Request, res: Response) => {
  * @returns {Promise<Response>} - Express response object with status and message.
  * @throws {Error} - If there's an error while deleting the book instance.
  */
-export const deleteBookInstance = async (req: Request, res: Response): Promise<Response> => {
+export const deleteBookInstance = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const bookinstance = await BookInstance.findByPk(req.params.bookinstanceId);
     if (!bookinstance) {

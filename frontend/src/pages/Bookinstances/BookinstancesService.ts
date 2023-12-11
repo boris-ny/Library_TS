@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const fetchBookinstancesDetails = async () => {
   try {
-    const url = "http://localhost:5000/bookinstances";
+    const url = `${import.meta.env.VITE_DB_URL}/bookinstances`;
     const token = localStorage.getItem("token");
 
     const response = await axios.get(url, {
