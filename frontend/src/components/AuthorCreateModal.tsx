@@ -2,8 +2,6 @@ import * as formik from "formik";
 import * as Yup from "yup";
 import Modal from "react-bootstrap/Modal";
 import { Button, Container, Form } from "react-bootstrap";
-// import { createAuthor } from "../util/api";
-// import { useEffect, useState } from "react";
 import { Author } from "../types/common";
 
 interface AuthorCreateModalProps {
@@ -18,15 +16,15 @@ const AuthorCreateModal = (props: AuthorCreateModalProps) => {
     first_name: Yup.string().required("First Name is required"),
     family_name: Yup.string().required("Last Name is required"),
     date_of_birth: Yup.date().required("Date of birth is required"),
-    date_of_death: Yup.date()
+    date_of_death: Yup.date(),
   });
 
   const { values, errors, handleChange, handleSubmit } = formik.useFormik({
     initialValues: {
       first_name: props.author?.first_name || "",
-      family_name: props.author?.family_name ||"",
-      date_of_birth:props.author?.date_of_birth||"" ,
-      date_of_death:props.author?.date_of_death ||"" ,
+      family_name: props.author?.family_name || "",
+      date_of_birth: props.author?.date_of_birth || "",
+      date_of_death: props.author?.date_of_death || "",
     },
     validationSchema: AuthorSchema,
     onSubmit: props.onSubmit,
@@ -75,7 +73,7 @@ const AuthorCreateModal = (props: AuthorCreateModalProps) => {
                   className="form-control"
                   name="date_of_birth"
                   onChange={handleChange}
-                  value={String(values.date_of_birth) }
+                  value={String(values.date_of_birth)}
                   isInvalid={!!errors.date_of_birth}
                 />
                 <Form.Control.Feedback type="invalid">

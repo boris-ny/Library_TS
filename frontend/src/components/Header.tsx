@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import HeaderUserName from "./HeaderUserName";
 
@@ -35,30 +35,29 @@ const HeaderBar = () => {
             <Nav.Link href="/authors">All Authors</Nav.Link>
             <Nav.Link href="/bookinstances">All BookInstances</Nav.Link>
             <Nav.Link href="/genres">All Genres</Nav.Link>
-           
-              <Nav.Link
-                style={{
-                  position: "relative",
-                }}>
+
+            <Nav.Link
+              style={{
+                position: "relative",
+              }}>
+              <div>
+                <HeaderUserName onClick={openUser} />
+              </div>
+              {openUserOptions && (
                 <div>
-                  <HeaderUserName onClick={openUser} />
+                  <Button
+                    variant="danger"
+                    className="mt-2"
+                    style={{
+                      position: "absolute",
+                      right: "0px",
+                    }}
+                    onClick={handleLogout}>
+                    Logout
+                  </Button>
                 </div>
-                {openUserOptions && (
-                  <div>
-                    <Button
-                      variant="danger"
-                      className="mt-2"
-                      style={{
-                        position: "absolute",
-                        right: "0px",
-                      }}
-                      onClick={handleLogout}>
-                      Logout
-                    </Button>
-                  </div>
-                )}
-              </Nav.Link>
-           
+              )}
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>

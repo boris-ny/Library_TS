@@ -31,7 +31,7 @@ const Bookdetail = () => {
       const errorMessage = error?.response?.data?.message;
       return errorMessage;
     }
-  }, [params.id, token])
+  }, [params.id, token]);
 
   const deleteBook = useCallback(async () => {
     if (!params.id) {
@@ -51,18 +51,17 @@ const Bookdetail = () => {
         icon: "success",
         timer: 10000,
       });
-      navigate ("/books")
+      navigate("/books");
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message;
       alert(errorMessage);
     }
-  }, [navigate, params.id, token])
+  }, [navigate, params.id, token]);
 
   React.useEffect(() => {
     fetchBookdetail();
-
-  },[]);
-
+    deleteBook();
+  }, []);
 
   return (
     <>
@@ -73,7 +72,7 @@ const Bookdetail = () => {
           <p>
             <strong>Author</strong> :
             <Link
-              to={`/authors/${bookdetail.Author ? bookdetail.Author.id: ""}`}>
+              to={`/authors/${bookdetail.Author ? bookdetail.Author.id : ""}`}>
               {bookdetail.Author
                 ? `${bookdetail.Author.first_name} ${bookdetail.Author.family_name}`
                 : ""}
