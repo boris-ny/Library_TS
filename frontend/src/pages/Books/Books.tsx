@@ -53,6 +53,7 @@ const Books = () => {
       setIsLoading(false);
     });
   }, []);
+  console.log(books);
 
   if (error) {
     return <div>Something went wrong! Please try again.</div>;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { fetchGenresDetails } from "./GenresServices"
 import { Container } from "react-bootstrap"
 import { Link } from "react-router-dom"
+import HeaderBar from "../../components/Header"
 
 
 function Genres() {
@@ -33,6 +34,7 @@ function Genres() {
   return (
 
     <>
+      <HeaderBar/>
       <Container>
         <div className="mt-3">
           <h1> Genres</h1>

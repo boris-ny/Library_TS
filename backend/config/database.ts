@@ -10,7 +10,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const sequelize = new Sequelize(
-  "postgres://postgres:admin@123@localhost:5432/project_0"
+  "postgres://postgres:admin@123@localhost:5432/project_0",
+  {
+    logging: false,
+  }
 );
 
 sequelize

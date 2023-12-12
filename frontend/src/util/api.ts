@@ -39,7 +39,7 @@ export const fetchBooksDetails = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return  response.data.data; 
+    return  response.data; 
   } catch (error: any) {
     return {
       error:

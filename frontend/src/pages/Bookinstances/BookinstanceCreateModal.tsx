@@ -62,7 +62,7 @@ const BookinstanceCreateModal = (props: any) => {
                 value={values.title}
                 isInvalid={!!errors.title}>
                 <option value="">Choose your book</option>
-                {data?.map((book: any) => (
+                {data.data?.map((book: any) => (
                   <option key={book.id} value={book.id}>
                     {book.title}
                   </option>
