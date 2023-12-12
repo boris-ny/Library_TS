@@ -2,31 +2,61 @@ import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { fetchBookinstancesDetails } from "./BookinstancesService";
 import HeaderBar from "../../components/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BookinstanceModal from "./BookinstanceModal";
 import BookinstanceCreateModal from "./BookinstanceCreateModal";
+import { useMutation } from "@tanstack/react-query";
+import { createBookCopy } from "../../util/api";
+import Swal from "sweetalert2";
 
-interface Bookinstance {
-  id: number;
-  title: string;
-  book: string;
-  imprint: string;
-  status: string;
-  due_back: string;
-}
+
 
 function Bookinstances() {
   const [bookinstances, setBookinstances] = useState([]);
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [showdetails, setShowdetails] = useState(false);
-  const [showCreate, setShowCreate]= useState(false)
+  const [showdetails, setShowDetails] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
 
-  const handleCloseDetails = () => setShowdetails(false);
+  const handleCloseDetails = () => setShowDetails(false);
 
-  const handleCloseCreate = () => setShowdetails(false);
+  const handleCloseCreate = () => setShowCreate(false);
 
-  useEffect(() => {
+  const navigate = useNavigate();
+
+  
+  
+  
+  
+  const mutation = useMutation({
+    mutationFn: createBookCopy,
+    onSuccess: () => {
+      Swal.fire({
+        title: "Success!",
+        text: `You have successfully created a new book copy!`,
+        background: "#242424",
+        icon: "success",
+        timer: 10000,
+      });
+
+      navigate("/bookinstances");
+    },
+    onError: (error) => { 
+      Swal.fire({
+        title: "Error!",
+        text: `${error} Something went wrong!`,
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    }
+  });
+  
+  const handleSubmit = (data:any) => {
+    mutation.mutate(data);
+    
+  }
+
+  useEffect(() => {(data: any) => createBookCopy(data);
     setIsLoading(true);
     fetchBookinstancesDetails().then((res) => {
       if (res.data) {
@@ -53,10 +83,20 @@ function Bookinstances() {
       <Container>
         <div className="mt-5 d-flex justify-content-between">
           <h1>Book Instances</h1>
-          <Button variant="primary" className="mb-3" onClick={(e) => { e.preventDefault(); setShowCreate(true)}}>
+          <Button
+            variant="primary"
+            className="mb-3"
+            onClick={(e) => {
+              e.preventDefault();
+              setShowCreate(true);
+            }}>
             Create a new copy of a book
           </Button>
-         <BookinstanceCreateModal show={showCreate} handleCloseCreate= {handleCloseCreate} /> 
+          <BookinstanceCreateModal
+            show={showCreate}
+            handleCloseCreate={handleCloseCreate}
+            onSubmit={handleSubmit}
+          />
         </div>
         <ol>
           {bookinstances.length > 0 ? (
@@ -66,7 +106,7 @@ function Bookinstances() {
                   to={`/book/${bookinstance.id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    setShowdetails(true);
+                    setShowDetails(true);
                   }}>
                   {bookinstance.title}: {bookinstance.imprint}
                 </Link>

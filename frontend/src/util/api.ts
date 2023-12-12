@@ -39,7 +39,7 @@ export const fetchBooksDetails = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return { data: response.data.data };
+    return  response.data.data; 
   } catch (error: any) {
     return {
       error:
@@ -85,3 +85,16 @@ export const createAuthor = async (data: Author ) => {
     .then((res) => res.data.data);
 };
 
+
+// Create new book copy api
+
+export const createBookCopy = async (data: any) => {
+  const token = localStorage.getItem("token");
+  return await axios.post(`${url}/bookinstances`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  .then((res) => res.data);
+  
+}

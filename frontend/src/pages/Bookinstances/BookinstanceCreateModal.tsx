@@ -1,41 +1,30 @@
-import * as formik from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Container, Form, Modal } from "react-bootstrap";
-import React from "react";
 import { fetchBooksDetails } from "../../util/api";
+import { useQuery } from "@tanstack/react-query";
 
-interface BookinstanceCreateModalProps {
-  book: string;
-  book_id: number;
-  imprint: string;
-  show: boolean;
-  handleCLose: () => void;
-  onSubmit: (values: BookinstanceCreateModalProps, { resetForm }) => void;
-}
+
 
 const statuses = ["Available", "Maintenance", "Loaned", "Reserved"];
 
 const BookinstanceCreateModal = (props: any) => {
-  const [books, setBooks] = React.useState([]);
-
   const BookinstanceSchema = Yup.object().shape({
-    book_id: Yup.number().required("Please choose the book"),
+    title: Yup.string().required("Please choose the book"),
     imprint: Yup.string().required("Please input the imprint the book copy"),
     status: Yup.string().required("Status of the copy is required"),
     due_back: Yup.date().required("Please input the due back date"),
   });
 
-  React.useEffect(() => {
-    fetchBooksDetails().then((res) => {
-      if (res.data) {
-        setBooks(res.data);
-      }
-    });
-  }, []);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["books"],
+    queryFn: fetchBooksDetails,
+  });
 
-  const { values, errors, handleChange, handleSubmit } = formik.useFormik({
+  const formik = useFormik({
     initialValues: {
-      book_id: props.book_id || 0,
+      title: props.book?.book || "",
+      book_id: props.book?.book_id || "",
       imprint: props.imprint || "",
       status: props.status || "",
       due_back: props.dueback || "",
@@ -43,10 +32,14 @@ const BookinstanceCreateModal = (props: any) => {
     validationSchema: BookinstanceSchema,
     onSubmit: props.onSubmit,
   });
+  const { values, errors, handleChange, handleSubmit } = formik;
+
+  if (error) return <p>{error.message}</p>;
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <Modal show={props.show} onHide={props.handleCloseCreate}>
-      <Modal.Header closeButton={true}>
+      <Modal.Header closeButton>
         <Modal.Title>New Copy</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -56,19 +49,27 @@ const BookinstanceCreateModal = (props: any) => {
               <Form.Label>Book</Form.Label>
               <Form.Control
                 as={"select"}
-                name="book_id"
-                onChange={handleChange}
-                value={values.book_id}
-                isInvalid={!!errors.book_id}>
+                name="title"
+                onChange={(e) => {
+                  formik.setFieldValue("book_id", e.target.value);
+
+                  const find = data?.find(
+                    (book: any) => Number(book.id) === Number(e.target.value)
+                  );
+
+                  formik.setFieldValue("title", find.title || "");
+                }}
+                value={values.title}
+                isInvalid={!!errors.title}>
                 <option value="">Choose your book</option>
-                {books.map((book: any) => (
+                {data?.map((book: any) => (
                   <option key={book.id} value={book.id}>
                     {book.title}
                   </option>
                 ))}
               </Form.Control>
               <Form.Control.Feedback type="invalid">
-                {String(errors.book_id)}
+                {String(errors.title)}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="imprint">
@@ -94,11 +95,14 @@ const BookinstanceCreateModal = (props: any) => {
                 isInvalid={!!errors.status}>
                 <option value="">Choose status</option>
                 {statuses.map((status: string) => (
-                  <option key={status} value={values.status}>
+                  <option key={status} value={status}>
                     {status}
                   </option>
                 ))}
               </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {String(errors.status)}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
               <Form.Label>Due Back</Form.Label>
