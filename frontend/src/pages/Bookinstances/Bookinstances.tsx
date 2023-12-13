@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { fetchBookinstancesDetails } from "./BookinstancesService";
 import HeaderBar from "../../components/Header";
-import { Link } from "react-router-dom";
 import BookinstanceModal from "./BookinstanceModal";
 import BookinstanceCreateModal from "./BookinstanceCreateModal";
 import { useMutation } from "@tanstack/react-query";
