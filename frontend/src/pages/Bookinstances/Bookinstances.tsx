@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { fetchBookinstancesDetails } from "./BookinstancesService";
 import HeaderBar from "../../components/Header";
-import BookinstanceModal from "./BookinstanceModal";
+
 import BookinstanceCreateModal from "./BookinstanceCreateModal";
-import { useMutation } from "@tanstack/react-query";
-import { createBookCopy } from "../../util/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { updateBookinstance, createBookCopy } from "../../util/api";
 import Swal from "sweetalert2";
 import Card from "react-bootstrap/Card";
 
-
+import { BOOK_INSTANCES } from "../../util/queryconstants";
+import BookinstanceUpdateModal from "./BookinstanceUpdateModal";
 
 function Bookinstances() {
-  const [bookinstances, setBookinstances] = useState([]);
-  const [error, setError] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showdetails, setShowDetails] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
+  const [currentBookinstance, setCurrentBookinstance] = useState<any>();
 
-  const handleCloseDetails = () => setShowDetails(false);
+  const handleCloseUpdate = () => setShowUpdate(false);
 
   const handleCloseCreate = () => setShowCreate(false);
 
-  const mutation = useMutation({
+  const queryClient = useQueryClient();
+
+  const mutationCreate = useMutation({
     mutationFn: createBookCopy,
     onSuccess: () => {
       Swal.fire({
@@ -31,38 +32,70 @@ function Bookinstances() {
         background: "#242424",
         icon: "success",
         timer: 10000,
+        showConfirmButton: false,
       });
 
-      
+      queryClient.invalidateQueries({
+        queryKey: [BOOK_INSTANCES],
+      });
+      setShowCreate(false);
     },
-    onError: (error) => { 
+    onError: (error) => {
       Swal.fire({
         title: "Error!",
         text: `${error} Something went wrong!`,
         icon: "error",
         confirmButtonText: "Ok",
       });
-    }
+    },
   });
-  
-  const handleSubmit = (data:any) => {
-    mutation.mutate(data);
-    mutation.reset();
-    
-  }
 
-  useEffect(() => {(data: any) => createBookCopy(data);
-    setIsLoading(true);
-    fetchBookinstancesDetails().then((res) => {
-      if (res.data) {
-        setBookinstances(res.data);
-      }
-      if (res.error) {
-        setError(res.error);
-      }
-      setIsLoading(false);
-    });
-  }, []);
+  const mutationUpdate = useMutation({
+    
+    mutationFn: updateBookinstance,
+    onSuccess: () => {
+      Swal.fire({
+        title: "Success!",
+        text: `You have successfully Updated ur book copy!`,
+        background: "#242424",
+        icon: "success",
+        timer: 10000,
+        showConfirmButton: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [BOOK_INSTANCES],
+      });
+      setShowUpdate(false);
+    },
+    onError: (error) => {
+      Swal.fire({
+        title: "Error!",
+        text: `${error} Something went wrong!`,
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    },
+  });
+
+  const handleSubmitCreate = (data: any) => {
+    mutationCreate.mutate(data);
+    mutationCreate.reset();
+  };
+
+  const handleSubmitUpdate = (data: any) => {
+    mutationUpdate.mutate({...data, id:currentBookinstance.id});
+    mutationUpdate.reset();
+  };
+
+  const {
+    data: bookinstances,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: [BOOK_INSTANCES],
+    queryFn: fetchBookinstancesDetails,
+  });
 
   if (error) {
     return <div>Something went wrong! Please try again.</div>;
@@ -71,11 +104,15 @@ function Bookinstances() {
   if (isLoading) {
     return <div>The Page is Loading ...</div>;
   }
+  
 
   return (
     <>
       <HeaderBar />
-      <Container>
+      <Container style={{
+        minHeight: "100vh",
+      }}
+      >
         <div className="mt-5 d-flex justify-content-between">
           <h1>Book Instances</h1>
           <Button
@@ -90,57 +127,12 @@ function Bookinstances() {
           <BookinstanceCreateModal
             show={showCreate}
             handleCloseCreate={handleCloseCreate}
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmitCreate}
           />
         </div>
-        {/* <ol>
-          {bookinstances.length > 0 ? (
-            bookinstances.map((bookinstance: any) => (
-              <li key={bookinstance.id}>
-                <Link
-                  to={`/book/${bookinstance.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowDetails(true);
-                  }}>
-                  {bookinstance.Book.title}: {bookinstance.imprint}
-                </Link>
-                <BookinstanceModal
-                  show={showdetails}
-                  handleClose={handleCloseDetails}
-                  title={bookinstance.id}
-                  Imprint={bookinstance.imprint}
-                  status={bookinstance.status}
-                  due_back={bookinstance.due_back}
-                  book={bookinstance.Book.title}
-                  bookid={bookinstance.Book.id}
-                />
-                {bookinstance.status === "Available" && (
-                  <span className="text-success ms-2">
-                    {bookinstance.status}
-                  </span>
-                )}
-                {bookinstance.status === "Loaned" && (
-                  <span className="text-danger ms-2">
-                    {bookinstance.status}
-                  </span>
-                )}
-                {bookinstance.status === "Reserved" && (
-                  <span className="text-warning ms-2">
-                    {bookinstance.status}
-                  </span>
-                )}
-                {bookinstance.status !== "Available" && (
-                  <span className="ms-2">(Due: {bookinstance.due_back})</span>
-                )}
-              </li>
-            ))
-          ) : (
-            <li>There are no book copies in this library</li>
-          )}
-        </ol> */}
+
         <Row className=" px-auto mx-auto">
-          {bookinstances.map((bookinstance: any) => (
+          {bookinstances?.data?.map((bookinstance: any) => (
             <Col key={bookinstance.id} lg="3" className="mt-4">
               <Card style={{ width: "100%" }}>
                 <Card.Header className="fs-3 text-center ">
@@ -179,20 +171,19 @@ function Bookinstances() {
                     className="ms-3"
                     onClick={(e) => {
                       e.preventDefault();
-                      setShowDetails(true);
+                      setShowUpdate(true);
+                      setCurrentBookinstance(bookinstance);
                     }}>
                     Update
                   </Button>
-                  <BookinstanceModal
-                    show={showdetails}
-                    handleClose={handleCloseDetails}
-                    title={bookinstance.id}
-                    Imprint={bookinstance.imprint}
-                    status={bookinstance.status}
-                    due_back={bookinstance.due_back}
-                    book={bookinstance.Book.title}
-                    bookid={bookinstance.Book.id}
-                  />
+                  {currentBookinstance && (
+                    <BookinstanceUpdateModal
+                      show={showUpdate}
+                      handleCloseUpdate={handleCloseUpdate}
+                      onSubmit={handleSubmitUpdate}
+                      bookinstance={currentBookinstance}
+                    />
+                  )}
                 </Card.Footer>
               </Card>
             </Col>

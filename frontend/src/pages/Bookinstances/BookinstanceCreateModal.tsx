@@ -4,7 +4,7 @@ import { Button, Container, Form, Modal } from "react-bootstrap";
 import { fetchBooksDetails } from "../../util/api";
 import { useQuery } from "@tanstack/react-query";
 
-const statuses = ["Available", "Maintenance", "Loaned", "Reserved"];
+const statuses = ["Available", "Loaned", "Reserved"];
 
 const BookinstanceCreateModal = (props: any) => {
   const BookinstanceSchema = Yup.object().shape({
@@ -14,14 +14,13 @@ const BookinstanceCreateModal = (props: any) => {
     due_back: Yup.date().required("Please input the due back date"),
   });
 
-  const { data, error, isLoading } = useQuery({
+  const { data:books, error, isLoading } = useQuery({
     queryKey: ["books"],
     queryFn: fetchBooksDetails,
   });
 
   const formik = useFormik({
     initialValues: {
-      // title: props.book?.book || "",
       book_id: props.book_id || "",
       imprint: props.imprint || "",
       status: props.status || "",
@@ -50,19 +49,10 @@ const BookinstanceCreateModal = (props: any) => {
               <Form.Control
                 as={"select"}
                 name="book_id"
-                onChange={handleChange
-                  
-                  // formik.setFieldValue("book_id", e.target.value);
-
-                  // const find = data?.find(
-                  //   (book: any) => Number(book.id) === Number(e.target.value)
-                  // );
-                  // formik.setFieldValue("title", find.title || "");
-                }
-                // value={values.book_id}
+                onChange={handleChange}
                 isInvalid={!!errors.book_id}>
                 <option value="">Choose your book</option>
-                {data?.map((book: any) => (
+                {books.data?.map((book: any) => (
                   <option key={book.id} value={book.id}>
                     {book.title}
                   </option>

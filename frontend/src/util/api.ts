@@ -39,7 +39,7 @@ export const fetchBooksDetails = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return  response.data.data; 
+    return  response.data; 
   } catch (error: any) {
     return {
       error:
@@ -61,7 +61,7 @@ export const createBook = async (data: Book) => {
     .then((res) => res.data.data);
 };
 // call api to update book
-export const UpdateBook = async (data: Book, id:number) => {
+export const updateBook = async (data: Book, id:number) => {
   
   const token = localStorage.getItem("token");
   return await axios
@@ -98,3 +98,17 @@ export const createBookCopy = async (data: any) => {
   .then((res) => res.data);
   
 }
+
+// Update book copy api
+
+export const updateBookinstance = async ({id, ...data}: any) => {
+  const token = localStorage.getItem("token");
+  return await axios
+    .put(`${url}/bookinstances/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.data);
+};
+

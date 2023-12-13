@@ -3,7 +3,7 @@ import { Button, Container } from "react-bootstrap";
 import EditButton from "../../assets/edit.svg";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
-import { fetchBooksDetails, UpdateBook } from "../../util/api";
+import { fetchBooksDetails, updateBook } from "../../util/api";
 import { Book } from "../../types/common";
 import BookUpdateModal from "../../components/BookUpdateModal";
 import Swal from "sweetalert2";
@@ -19,7 +19,7 @@ const Books = () => {
 
   const handleSubmit = (values: Book, { resetForm }) => {
     if (currentBook && currentBook.id) {
-      UpdateBook(values, currentBook.id)
+      updateBook(values, currentBook.id)
         .then(() => {
           localStorage.getItem("token");
           Swal.fire({
@@ -52,8 +52,7 @@ const Books = () => {
       }
       setIsLoading(false);
     });
-  }, []);
-  // console.log(books);
+  }, [])
 
   if (error) {
     return <div>Something went wrong! Please try again.</div>;
