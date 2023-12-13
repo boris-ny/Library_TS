@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { fetchBookinstancesDetails } from "./BookinstancesService";
 import HeaderBar from "../../components/Header";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import BookinstanceModal from "./BookinstanceModal";
 import BookinstanceCreateModal from "./BookinstanceCreateModal";
 import { useMutation } from "@tanstack/react-query";
 import { createBookCopy } from "../../util/api";
 import Swal from "sweetalert2";
+import Card from "react-bootstrap/Card";
 
 
 
@@ -22,12 +23,6 @@ function Bookinstances() {
 
   const handleCloseCreate = () => setShowCreate(false);
 
-  const navigate = useNavigate();
-
-  
-  
-  
-  
   const mutation = useMutation({
     mutationFn: createBookCopy,
     onSuccess: () => {
@@ -39,7 +34,7 @@ function Bookinstances() {
         timer: 10000,
       });
 
-      navigate("/bookinstances");
+      
     },
     onError: (error) => { 
       Swal.fire({
@@ -53,6 +48,7 @@ function Bookinstances() {
   
   const handleSubmit = (data:any) => {
     mutation.mutate(data);
+    mutation.reset();
     
   }
 
@@ -98,7 +94,7 @@ function Bookinstances() {
             onSubmit={handleSubmit}
           />
         </div>
-        <ol>
+        {/* <ol>
           {bookinstances.length > 0 ? (
             bookinstances.map((bookinstance: any) => (
               <li key={bookinstance.id}>
@@ -108,12 +104,12 @@ function Bookinstances() {
                     e.preventDefault();
                     setShowDetails(true);
                   }}>
-                  {bookinstance.title}: {bookinstance.imprint}
+                  {bookinstance.Book.title}: {bookinstance.imprint}
                 </Link>
                 <BookinstanceModal
                   show={showdetails}
                   handleClose={handleCloseDetails}
-                  title={bookinstance.title}
+                  title={bookinstance.id}
                   Imprint={bookinstance.imprint}
                   status={bookinstance.status}
                   due_back={bookinstance.due_back}
@@ -125,17 +121,16 @@ function Bookinstances() {
                     {bookinstance.status}
                   </span>
                 )}
-                {bookinstance.status === "Maintenance" && (
+                {bookinstance.status === "Loaned" && (
                   <span className="text-danger ms-2">
                     {bookinstance.status}
                   </span>
                 )}
-                {bookinstance.status !== "Available" &&
-                  bookinstance.status !== "Maintenance" && (
-                    <span className="text-warning ms-2">
-                      {bookinstance.status}
-                    </span>
-                  )}
+                {bookinstance.status === "Reserved" && (
+                  <span className="text-warning ms-2">
+                    {bookinstance.status}
+                  </span>
+                )}
                 {bookinstance.status !== "Available" && (
                   <span className="ms-2">(Due: {bookinstance.due_back})</span>
                 )}
@@ -144,7 +139,66 @@ function Bookinstances() {
           ) : (
             <li>There are no book copies in this library</li>
           )}
-        </ol>
+        </ol> */}
+        <Row className=" px-auto mx-auto">
+          {bookinstances.map((bookinstance: any) => (
+            <Col key={bookinstance.id} lg="3" className="mt-4">
+              <Card style={{ width: "100%" }}>
+                <Card.Header className="fs-3 text-center ">
+                  {bookinstance.Book.title}
+                </Card.Header>
+                <Card.Body>
+                  <Card.Title>ID:{bookinstance.Book.id}</Card.Title>
+                  <Card.Text
+                    style={{
+                      height: "50px",
+                    }}>
+                    <div className="fs-4">
+                      <span className="my-2">Status: </span>
+                      {bookinstance.status === "Available" ? (
+                        <Badge bg="success">{bookinstance.status}</Badge>
+                      ) : bookinstance.status === "Loaned" ? (
+                        <Badge bg="danger">{bookinstance.status}</Badge>
+                      ) : bookinstance.status === "Reserved" ? (
+                        <Badge bg="warning">{bookinstance.status}</Badge>
+                      ) : (
+                        "Null"
+                      )}
+                    </div>
+                    <div>
+                      {bookinstance.status !== "Available" && (
+                        <span>Due: {bookinstance.due_back}</span>
+                      )}
+                    </div>
+                  </Card.Text>
+                </Card.Body>
+                <Card.Footer className="">
+                  <Button variant="danger">Delete</Button>
+
+                  <Button
+                    variant="info"
+                    className="ms-3"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowDetails(true);
+                    }}>
+                    Update
+                  </Button>
+                  <BookinstanceModal
+                    show={showdetails}
+                    handleClose={handleCloseDetails}
+                    title={bookinstance.id}
+                    Imprint={bookinstance.imprint}
+                    status={bookinstance.status}
+                    due_back={bookinstance.due_back}
+                    book={bookinstance.Book.title}
+                    bookid={bookinstance.Book.id}
+                  />
+                </Card.Footer>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </Container>
     </>
   );

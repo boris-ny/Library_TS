@@ -70,7 +70,6 @@ export const getBookInstanceById = async (
 // Validation schema for the request body
 
 const bookinstanceSchema = Joi.object({
-  title: Joi.string().required(),
   book_id: Joi.number().required(),
   imprint: Joi.string().required(),
   status: Joi.string().required(),

@@ -4,13 +4,11 @@ import { Button, Container, Form, Modal } from "react-bootstrap";
 import { fetchBooksDetails } from "../../util/api";
 import { useQuery } from "@tanstack/react-query";
 
-
-
 const statuses = ["Available", "Maintenance", "Loaned", "Reserved"];
 
 const BookinstanceCreateModal = (props: any) => {
   const BookinstanceSchema = Yup.object().shape({
-    title: Yup.string().required("Please choose the book"),
+    book_id: Yup.string().required("Please choose the book"),
     imprint: Yup.string().required("Please input the imprint the book copy"),
     status: Yup.string().required("Status of the copy is required"),
     due_back: Yup.date().required("Please input the due back date"),
@@ -23,8 +21,8 @@ const BookinstanceCreateModal = (props: any) => {
 
   const formik = useFormik({
     initialValues: {
-      title: props.book?.book || "",
-      book_id: props.book?.book_id || "",
+      // title: props.book?.book || "",
+      book_id: props.book_id || "",
       imprint: props.imprint || "",
       status: props.status || "",
       due_back: props.dueback || "",
@@ -33,6 +31,8 @@ const BookinstanceCreateModal = (props: any) => {
     onSubmit: props.onSubmit,
   });
   const { values, errors, handleChange, handleSubmit } = formik;
+
+  // console.log(values);
 
   if (error) return <p>{error.message}</p>;
   if (isLoading) return <p>Loading...</p>;
@@ -46,30 +46,30 @@ const BookinstanceCreateModal = (props: any) => {
         <Container>
           <Form onSubmit={handleSubmit}>
             <Form.Group>
-              <Form.Label>Book</Form.Label>
+              <Form.Label>Title</Form.Label>
               <Form.Control
                 as={"select"}
-                name="title"
-                onChange={(e) => {
-                  formik.setFieldValue("book_id", e.target.value);
+                name="book_id"
+                onChange={handleChange
+                  
+                  // formik.setFieldValue("book_id", e.target.value);
 
-                  const find = data?.find(
-                    (book: any) => Number(book.id) === Number(e.target.value)
-                  );
-
-                  formik.setFieldValue("title", find.title || "");
-                }}
-                value={values.title}
-                isInvalid={!!errors.title}>
+                  // const find = data?.find(
+                  //   (book: any) => Number(book.id) === Number(e.target.value)
+                  // );
+                  // formik.setFieldValue("title", find.title || "");
+                }
+                // value={values.book_id}
+                isInvalid={!!errors.book_id}>
                 <option value="">Choose your book</option>
-                {data.data?.map((book: any) => (
+                {data?.map((book: any) => (
                   <option key={book.id} value={book.id}>
                     {book.title}
                   </option>
                 ))}
               </Form.Control>
               <Form.Control.Feedback type="invalid">
-                {String(errors.title)}
+                {String(errors.book_id)}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="imprint">
