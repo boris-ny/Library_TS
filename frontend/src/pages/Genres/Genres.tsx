@@ -32,16 +32,20 @@ function Genres() {
     return <div>The Page is Loading ...</div>;
   }
   return (
-
     <>
-      <HeaderBar/>
+      <HeaderBar />
       <Container>
         <div className="mt-3">
           <h1> Genres</h1>
           <ol className="fs-3 ms-3">
             {genres.map((genre: any) => (
               <li key={genre.id}>
-                <Link to={`/genre/${genre.id}`}>
+                <Link
+                  to={`/genre/${genre.id}`}
+                  style={{
+                    textDecoration: "underlined",
+                    color: "black",
+                  }}>
                   {genre.name}
                 </Link>
               </li>
@@ -50,7 +54,7 @@ function Genres() {
         </div>
       </Container>
     </>
-  )
+  );
 }
 
 export default Genres

@@ -4,6 +4,8 @@ import React from "react";
 import { Button, Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Guard } from "../../components/Guard.component";
+import { PermissionLevel } from "../../types/common";
 
 const url = import.meta.env.VITE_DB_URL;
 
@@ -84,9 +86,11 @@ const AuthorDetail = () => {
             <strong>Date of Death</strong> : {authorDetail.date_of_death}
           </li>
         </ul>
+        <Guard requiredRoles={[PermissionLevel.ADMIN]}>
         <Button variant="danger" onClick={()=>{deleteAuthor()}}>
           Delete
         </Button>
+      </Guard>
       </Container>
     </>
   );

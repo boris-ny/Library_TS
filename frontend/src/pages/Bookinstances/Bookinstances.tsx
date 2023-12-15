@@ -5,12 +5,18 @@ import HeaderBar from "../../components/Header";
 
 import BookinstanceCreateModal from "./BookinstanceCreateModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { updateBookinstance, createBookCopy } from "../../util/api";
+import {
+  updateBookinstance,
+  createBookCopy,
+  deleteBookinstance,
+} from "../../util/api";
 import Swal from "sweetalert2";
 import Card from "react-bootstrap/Card";
 
 import { BOOK_INSTANCES } from "../../util/queryconstants";
 import BookinstanceUpdateModal from "./BookinstanceUpdateModal";
+import { Guard } from "../../components/Guard.component";
+import { PermissionLevel } from "../../types/common";
 
 function Bookinstances() {
   const [showUpdate, setShowUpdate] = useState(false);
@@ -51,12 +57,38 @@ function Bookinstances() {
   });
 
   const mutationUpdate = useMutation({
-    
     mutationFn: updateBookinstance,
     onSuccess: () => {
       Swal.fire({
         title: "Success!",
         text: `You have successfully Updated ur book copy!`,
+        background: "#242424",
+        icon: "success",
+        timer: 10000,
+        showConfirmButton: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [BOOK_INSTANCES],
+      });
+      setShowUpdate(false);
+    },
+    onError: (error) => {
+      Swal.fire({
+        title: "Error!",
+        text: `${error} Something went wrong!`,
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    },
+  });
+
+  const mutationDelete = useMutation({
+    mutationFn: deleteBookinstance,
+    onSuccess: () => {
+      Swal.fire({
+        title: "Success!",
+        text: `You have successfully Deleted ur book copy!`,
         background: "#242424",
         icon: "success",
         timer: 10000,
@@ -84,8 +116,13 @@ function Bookinstances() {
   };
 
   const handleSubmitUpdate = (data: any) => {
-    mutationUpdate.mutate({...data, id:currentBookinstance.id});
+    mutationUpdate.mutate({ ...data, id: currentBookinstance.id });
     mutationUpdate.reset();
+  };
+
+  const handleSubmitDelete = (data: any) => {
+    mutationDelete.mutate({ id: data.id });
+    mutationDelete.reset();
   };
 
   const {
@@ -104,26 +141,27 @@ function Bookinstances() {
   if (isLoading) {
     return <div>The Page is Loading ...</div>;
   }
-  
 
   return (
     <>
       <HeaderBar />
-      <Container style={{
-        minHeight: "100vh",
-      }}
-      >
+      <Container
+        style={{
+          minHeight: "100vh",
+        }}>
         <div className="mt-5 d-flex justify-content-between">
           <h1>Book Instances</h1>
-          <Button
-            variant="primary"
-            className="mb-3"
-            onClick={(e) => {
-              e.preventDefault();
-              setShowCreate(true);
-            }}>
-            Create a new copy of a book
-          </Button>
+          <Guard requiredRoles={[PermissionLevel.ADMIN]}>
+            <Button
+              variant="primary"
+              className="mb-3"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowCreate(true);
+              }}>
+              Create a new copy of a book
+            </Button>
+          </Guard>
           <BookinstanceCreateModal
             show={showCreate}
             handleCloseCreate={handleCloseCreate}
@@ -163,28 +201,37 @@ function Bookinstances() {
                     </div>
                   </Card.Text>
                 </Card.Body>
-                <Card.Footer className="">
-                  <Button variant="danger">Delete</Button>
+                <Guard requiredRoles={[PermissionLevel.ADMIN]}>
+                  <Card.Footer>
+                    <Button
+                      variant="danger"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSubmitDelete(bookinstance);
+                      }}>
+                      Delete
+                    </Button>
 
-                  <Button
-                    variant="info"
-                    className="ms-3"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowUpdate(true);
-                      setCurrentBookinstance(bookinstance);
-                    }}>
-                    Update
-                  </Button>
-                  {currentBookinstance && (
-                    <BookinstanceUpdateModal
-                      show={showUpdate}
-                      handleCloseUpdate={handleCloseUpdate}
-                      onSubmit={handleSubmitUpdate}
-                      bookinstance={currentBookinstance}
-                    />
-                  )}
-                </Card.Footer>
+                    <Button
+                      variant="info"
+                      className="ms-3"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowUpdate(true);
+                        setCurrentBookinstance(bookinstance);
+                      }}>
+                      Update
+                    </Button>
+                    {currentBookinstance && (
+                      <BookinstanceUpdateModal
+                        show={showUpdate}
+                        handleCloseUpdate={handleCloseUpdate}
+                        onSubmit={handleSubmitUpdate}
+                        bookinstance={currentBookinstance}
+                      />
+                    )}
+                  </Card.Footer>
+                </Guard>
               </Card>
             </Col>
           ))}

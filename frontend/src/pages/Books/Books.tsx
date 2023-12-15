@@ -4,10 +4,12 @@ import EditButton from "../../assets/edit.svg";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
 import { fetchBooksDetails, updateBook } from "../../util/api";
-import { Book } from "../../types/common";
+import { Book, PermissionLevel } from "../../types/common";
 import BookUpdateModal from "../../components/BookUpdateModal";
 import Swal from "sweetalert2";
 import Headerbar from "../../components/Header";
+import { Guard } from "../../components/Guard.component";
+
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState();
@@ -52,7 +54,7 @@ const Books = () => {
       }
       setIsLoading(false);
     });
-  }, [])
+  }, []);
 
   if (error) {
     return <div>Something went wrong! Please try again.</div>;
@@ -70,16 +72,19 @@ const Books = () => {
           <div className="mt-3">
             <div className="d-flex justify-content-between">
               <h1>Books</h1>
-              <Button variant="primary" className="mb-3">
-                <Link
-                  to="/books/create"
-                  style={{
-                    color: "white",
-                    textDecoration: "none",
-                  }}>
-                  Add new book
-                </Link>
-              </Button>
+
+              <Guard requiredRoles={[PermissionLevel.ADMIN]}>
+                <Button variant="primary" className="mb-3">
+                  <Link
+                    to="/books/create"
+                    style={{
+                      color: "white",
+                      textDecoration: "none",
+                    }}>
+                    Add new book
+                  </Link>
+                </Button>
+              </Guard>
             </div>
             <table className="table table-striped">
               <thead>
@@ -119,6 +124,7 @@ const Books = () => {
                         </Link>
                       </td>
                       <td>
+                        <Guard requiredRoles={[PermissionLevel.ADMIN]}>
                         <Button
                           variant="outline-secondary"
                           onClick={(e) => {
@@ -127,7 +133,8 @@ const Books = () => {
                             setCurrentBook(book);
                           }}>
                           <Image src={EditButton} />
-                        </Button>
+                          </Button>
+                        </Guard>
                       </td>
                     </tr>
                   );

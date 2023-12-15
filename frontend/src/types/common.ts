@@ -39,5 +39,11 @@ export interface ServiceError extends Error {
 }
 
 export interface IGuardProps extends React.PropsWithChildren {
-  requiredRoles: string[];
+  requiredRoles: number[];
+}
+
+export enum PermissionLevel {
+  ADMIN = 1,
+  USER = 2,
+  GUEST = 3,
 }

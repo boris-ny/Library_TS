@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback } from "react";
-import { Book } from "../../types/common";
+import { Book, PermissionLevel } from "../../types/common";
 import axios from "axios";
 import { Button, Container } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Headerbar from "../../components/Header";
+import { Guard } from "../../components/Guard.component";
 
 const Bookdetail = () => {
   const [bookdetail, setBookdetail] = React.useState<Book>({} as Book);
@@ -88,9 +89,11 @@ const Bookdetail = () => {
             {bookdetail.Genre ? bookdetail.Genre.name : ""}
           </p>
         </ul>
-        <Button variant="danger" onClick={deleteBook}>
-          Delete
-        </Button>
+        <Guard requiredRoles={[PermissionLevel.ADMIN]}>
+          <Button variant="danger" onClick={deleteBook}>
+            Delete
+          </Button>
+        </Guard>
       </Container>
     </>
   );

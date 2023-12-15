@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import AuthorCreateModal from "../../components/AuthorCreateModal";
 import { createAuthor } from "../../util/api";
 import Swal from "sweetalert2";
-import { Author } from "../../types/common";
+import { Author, PermissionLevel } from "../../types/common";
 import Headerbar from "../../components/Header";
+import { Guard } from "../../components/Guard.component";
 
 function Authors() {
   const [authors, setAuthors] = useState([]);
@@ -68,6 +69,7 @@ function Authors() {
       <Container>
         <div className="mt-5 d-flex mb-4 justify-content-between ">
           <h1 className="mx-4">Authors</h1>
+          <Guard requiredRoles={[PermissionLevel.ADMIN]}>
           <Button
             onClick={(e) => {
               e.preventDefault();
@@ -75,7 +77,8 @@ function Authors() {
               setNewAuthor(true);
             }}>
             Add new Author
-          </Button>
+            </Button>
+          </Guard>
           {newAuthor && (
             <AuthorCreateModal
               show={show}

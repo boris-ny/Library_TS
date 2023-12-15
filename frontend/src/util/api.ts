@@ -26,7 +26,7 @@ export const loginUser = async (data: Userlogin) => {
     .then((res) => res.data);
   };
  
-// call api to get user details
+
 
 
 // call api to get all books
@@ -112,3 +112,17 @@ export const updateBookinstance = async ({id, ...data}: any) => {
     .then((res) => res.data.data);
 };
 
+
+// Delete book copy api
+
+export const deleteBookinstance = async ({id,...data}: any) => {
+  const token = localStorage.getItem("token");
+  return await axios
+    .delete(`${url}/bookinstances/${id} `, {
+      data: data,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.data);
+}
