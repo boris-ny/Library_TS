@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import dotenv from 'dotenv';
 import express, { Request, Response, Application } from 'express';
 import sequelize from './config/database';

@@ -35,8 +35,6 @@ const BookinstanceCreateModal = (props: any) => {
 	});
 	const { values, errors, handleChange, handleSubmit } = formik;
 
-	// console.log(values);
-
 	if (error) return <p>{error.message}</p>;
 	if (isLoading) return <p>Loading...</p>;
 
