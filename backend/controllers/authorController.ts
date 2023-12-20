@@ -3,7 +3,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import Author from '../models/author.models';
 
 // GET /authors
-
+//Test
 /**
  * Retrieves all authors from the database.
  * @function
