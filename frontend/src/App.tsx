@@ -26,20 +26,20 @@ function App() {
 			<QueryClientProvider client={queryClient}>
 				<Routes>
 					<Route element={<PublicRoutes />} errorElement={<ErrorPage />}>
-						<Route path='/login' element={<Login />} />
-						<Route path='/register' element={<Register />} />
+						<Route path="/login" element={<Login />} />
+						<Route path="/register" element={<Register />} />
 					</Route>
 
 					<Route element={<PrivateRoutes />} errorElement={<ErrorPage />}>
-						<Route index path='/' element={<Dashboard />} />
-						<Route path='/authors' element={<Authors />} />
-						<Route path='/books' element={<Books />} />
-						<Route path='/books/create' element={<BookCreate />} />
-						<Route path='/book/:id' element={<Bookdetail />} />
-						<Route path='/authors/:id' element={<AuthorDetail />} />
-						<Route path='/bookinstances' element={<Bookinstances />} />
-						<Route path='/genres' element={<Genres />} />
-						<Route path='/genre/:id' element={<GenreDetails />} />
+						<Route index path="/" element={<Dashboard />} />
+						<Route path="/authors" element={<Authors />} />
+						<Route path="/books" element={<Books />} />
+						<Route path="/books/create" element={<BookCreate />} />
+						<Route path="/book/:id" element={<Bookdetail />} />
+						<Route path="/authors/:id" element={<AuthorDetail />} />
+						<Route path="/bookinstances" element={<Bookinstances />} />
+						<Route path="/genres" element={<Genres />} />
+						<Route path="/genre/:id" element={<GenreDetails />} />
 					</Route>
 				</Routes>
 			</QueryClientProvider>
