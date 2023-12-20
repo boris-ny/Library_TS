@@ -9,6 +9,7 @@
 		"ecmaVersion": 2020, // Adjust based on your supported ECMAScript version
 		"sourceType": "module"
 	},
+	"ignorePatterns": ["dist/", ".eslintrc.json"],
 	"rules": {
 		// Turn off rules that are unnecessary or incompatible with Express
 		"@typescript-eslint/explicit-module-boundary-types": "off",

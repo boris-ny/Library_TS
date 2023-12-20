@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+commitlint.config.js
+```

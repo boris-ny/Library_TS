@@ -6,7 +6,7 @@
 		"plugin:react-hooks/recommended",
 		"plugin:prettier/recommended"
 	],
-	"ignorePatterns": ["dist", ".eslintrc.cjs"],
+	"ignorePatterns": ["dist/**", ".eslintrc.json"],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": "latest",
