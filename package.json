@@ -10,24 +10,26 @@
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:backend": "nodemon backend/index.ts",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "eslint-config-prettier": "^9.1.0",
     "husky": "^8.0.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
     "eslint": "^8.56.0",
-    "husky": "^8.0.3",
+    "eslint-plugin-react": "^7.33.2",
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "yarn eslint --fix",
-      "yarn prettier --write"
+      "eslint --fix",
+      "prettier --write"
     ]
   }
 }
