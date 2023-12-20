@@ -1,21 +1,22 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true,
-      "tsx": true
-    },
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-  "plugins": ["react"],
-  "rules": {
-    "indent": ["warn", "tab"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"]
-  }
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
+	],
+	"plugins": ["@typescript-eslint"],
+	"parserOptions": {
+		"ecmaVersion": 2020, // Adjust based on your supported ECMAScript version
+		"sourceType": "module"
+	},
+	"rules": {
+		// Turn off rules that are unnecessary or incompatible with Express
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+
+		// Additional rules for Express-specific best practices
+		"require-await": "error", // Enforce async/await usage
+		"no-unused-vars": "warn",
+		"no-console": "warn" // Consider enforcing error for production
+	}
 }

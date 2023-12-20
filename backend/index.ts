@@ -18,7 +18,7 @@ const app: Application = express();
 const port = process.env.PORT || 8000;
 
 // Authenticate the connection to the database
-sequelize.authenticate()
+sequelize.authenticate();
 
 // Add middleware to parse incoming requests with JSON payloads
 app.use(express.json());
@@ -31,14 +31,11 @@ app.use('/', indexRouter);
 // Add middleware to handle errors
 app.use(errors());
 app.use((_: Request, res: Response) => {
-  return res.status(500).send('Something broke!');
+	return res.status(500).send('Something broke!');
 });
 
-
-
-
 app.listen(port, () => {
-            console.log(`Server is running on port: ${port}`)
-        })
+	console.log(`Server is running on port: ${port}`);
+});
 
-export default app
+export default app;
