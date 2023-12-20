@@ -1,6 +1,6 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from 'sequelize';
 
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 /**
  * Creates a new Sequelize instance with the provided database URL.
@@ -10,21 +10,23 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const sequelize = new Sequelize(
-  "postgres://postgres:admin@123@localhost:5432/project_0",
-  {
-    logging: false,
-  }
+	'postgres://postgres:admin@123@localhost:5432/project_0',
+	{
+		logging: false,
+	}
 );
 
 sequelize
-  .sync({
-    alter: true,
-  })
-  .then(() => {
-    console.log("Sequelize initialized");
-  })
-  .catch((err: any) => {
-    console.error("Sequelize Initialisation threw an error:", err);
-  });
+	.sync({
+		alter: true,
+	})
+	.then(() => {
+		// eslint-disable-next-line no-console
+		console.log('Sequelize initialized');
+	})
+	.catch((err: any) => {
+		// eslint-disable-next-line no-console
+		console.error('Sequelize Initialisation threw an error:', err);
+	});
 
 export default sequelize;

@@ -6,17 +6,17 @@
 	],
 	"plugins": ["@typescript-eslint"],
 	"parserOptions": {
-		"ecmaVersion": 2020, // Adjust based on your supported ECMAScript version
+		"ecmaVersion": "latest", // Adjust based on your supported ECMAScript version
 		"sourceType": "module"
 	},
 	"rules": {
 		// Turn off rules that are unnecessary or incompatible with Express
 		"@typescript-eslint/explicit-module-boundary-types": "off",
-		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-explicit-any": "off"
 
 		// Additional rules for Express-specific best practices
-		"require-await": "error", // Enforce async/await usage
-		"no-unused-vars": "warn",
-		"no-console": "warn" // Consider enforcing error for production
-	}
+		 // Enforce async/await usage//
+	
+	},
+	"ignorePatterns": ["dist/*", "node_modules/"]
 }

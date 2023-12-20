@@ -1,11 +1,19 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAuthor = exports.updateAuthor = exports.createAuthor = exports.authorValidation = exports.getAuthorById = exports.getAllAuthors = void 0;
-const celebrate_1 = require("celebrate");
-const author_models_1 = __importDefault(require("../models/author.models"));
+'use strict';
+var __importDefault =
+	(this && this.__importDefault) ||
+	function (mod) {
+		return mod && mod.__esModule ? mod : { default: mod };
+	};
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.deleteAuthor =
+	exports.updateAuthor =
+	exports.createAuthor =
+	exports.authorValidation =
+	exports.getAuthorById =
+	exports.getAllAuthors =
+		void 0;
+const celebrate_1 = require('celebrate');
+const author_models_1 = __importDefault(require('../models/author.models'));
 // GET /authors
 /**
  * Retrieves all authors from the database.
@@ -17,17 +25,16 @@ const author_models_1 = __importDefault(require("../models/author.models"));
  * @throws {Error} - If there's an error while retrieving authors from the database.
  */
 const getAllAuthors = async (req, res) => {
-    try {
-        const authors = await author_models_1.default.findAll({});
-        return res.json({
-            status: 200,
-            message: "success",
-            data: authors,
-        });
-    }
-    catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+	try {
+		const authors = await author_models_1.default.findAll({});
+		return res.json({
+			status: 200,
+			message: 'success',
+			data: authors,
+		});
+	} catch (err) {
+		return res.status(500).json({ message: err.message });
+	}
 };
 exports.getAllAuthors = getAllAuthors;
 /**
@@ -39,23 +46,22 @@ exports.getAllAuthors = getAllAuthors;
  * @returns {Promise<Response>} - Express response object with author data or error message.
  */
 const getAuthorById = async (req, res) => {
-    try {
-        const author = await author_models_1.default.findByPk(req.params.authorId);
-        if (!author) {
-            return res.status(404).json({
-                status: 404,
-                message: "Author not found",
-            });
-        }
-        return res.json({
-            status: 200,
-            message: "success",
-            data: author,
-        });
-    }
-    catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+	try {
+		const author = await author_models_1.default.findByPk(req.params.authorId);
+		if (!author) {
+			return res.status(404).json({
+				status: 404,
+				message: 'Author not found',
+			});
+		}
+		return res.json({
+			status: 200,
+			message: 'success',
+			data: author,
+		});
+	} catch (err) {
+		return res.status(500).json({ message: err.message });
+	}
 };
 exports.getAuthorById = getAuthorById;
 /**
@@ -68,12 +74,14 @@ exports.getAuthorById = getAuthorById;
  * - date_of_death: optional date
  */
 const authorSchema = celebrate_1.Joi.object({
-    first_name: celebrate_1.Joi.string().required(),
-    family_name: celebrate_1.Joi.string().required(),
-    date_of_birth: celebrate_1.Joi.date().required(),
-    date_of_death: celebrate_1.Joi.date(),
+	first_name: celebrate_1.Joi.string().required(),
+	family_name: celebrate_1.Joi.string().required(),
+	date_of_birth: celebrate_1.Joi.date().required(),
+	date_of_death: celebrate_1.Joi.date(),
 });
-exports.authorValidation = (0, celebrate_1.celebrate)({ [celebrate_1.Segments.BODY]: authorSchema });
+exports.authorValidation = (0, celebrate_1.celebrate)({
+	[celebrate_1.Segments.BODY]: authorSchema,
+});
 /**
  * Creates a new author.
  * @function
@@ -83,17 +91,16 @@ exports.authorValidation = (0, celebrate_1.celebrate)({ [celebrate_1.Segments.BO
  * @returns {Promise<Response>} - The response object with status, message and data.
  */
 const createAuthor = async (req, res) => {
-    try {
-        const author = await author_models_1.default.create(req.body);
-        return res.json({
-            status: 200,
-            message: "success",
-            data: author,
-        });
-    }
-    catch (err) {
-        return res.status(500).json({ message: "intern" });
-    }
+	try {
+		const author = await author_models_1.default.create(req.body);
+		return res.json({
+			status: 200,
+			message: 'success',
+			data: author,
+		});
+	} catch (err) {
+		return res.status(500).json({ message: 'intern' });
+	}
 };
 exports.createAuthor = createAuthor;
 // Update an author on PUT.
@@ -107,24 +114,23 @@ exports.createAuthor = createAuthor;
  * @throws {Error} If there is an error updating the author.
  */
 const updateAuthor = async (req, res) => {
-    try {
-        const author = await author_models_1.default.findByPk(req.params.authorId);
-        if (!author) {
-            return res.status(404).json({
-                status: 404,
-                message: "Author not found",
-            });
-        }
-        await author.update(req.body);
-        return res.json({
-            status: 200,
-            message: "Updated author sucessfully",
-            data: author,
-        });
-    }
-    catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+	try {
+		const author = await author_models_1.default.findByPk(req.params.authorId);
+		if (!author) {
+			return res.status(404).json({
+				status: 404,
+				message: 'Author not found',
+			});
+		}
+		await author.update(req.body);
+		return res.json({
+			status: 200,
+			message: 'Updated author sucessfully',
+			data: author,
+		});
+	} catch (err) {
+		return res.status(500).json({ message: err.message });
+	}
 };
 exports.updateAuthor = updateAuthor;
 // Delete an author on DELETE.
@@ -135,23 +141,22 @@ exports.updateAuthor = updateAuthor;
  * @returns {Promise<Response>}A JSON response containing the status code, message, and deleted author data if successful.
  */
 const deleteAuthor = async (req, res) => {
-    try {
-        const author = await author_models_1.default.findByPk(req.params.authorId);
-        if (!author) {
-            return res.status(404).json({
-                status: 404,
-                message: "Author not found",
-            });
-        }
-        await author.destroy();
-        return res.json({
-            status: 200,
-            message: "Deleted successfully",
-            data: author,
-        });
-    }
-    catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+	try {
+		const author = await author_models_1.default.findByPk(req.params.authorId);
+		if (!author) {
+			return res.status(404).json({
+				status: 404,
+				message: 'Author not found',
+			});
+		}
+		await author.destroy();
+		return res.json({
+			status: 200,
+			message: 'Deleted successfully',
+			data: author,
+		});
+	} catch (err) {
+		return res.status(500).json({ message: err.message });
+	}
 };
 exports.deleteAuthor = deleteAuthor;
