@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
-enum PermissionLevel {
+export enum PermissionLevel {
 	ADMIN = 1,
 	USER = 2,
 	GUEST = 3,

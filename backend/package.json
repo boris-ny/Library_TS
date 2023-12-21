@@ -31,7 +31,8 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "prettier-eslint": "^16.2.0",
-    "sequelize": "^6.33.0"
+    "sequelize": "^6.33.0",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.1",

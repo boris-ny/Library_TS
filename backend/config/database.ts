@@ -9,13 +9,15 @@ import dotenv from 'dotenv';
  */
 dotenv.config();
 
-const sequelize = new Sequelize(
-	'postgres://postgres:admin@123@localhost:5432/project_0',
-	{
-		logging: false,
-	}
-);
+const databaseUrl = process.env.DB_URL;
 
+if (!databaseUrl) {
+	throw new Error('DB_URL is not defined');
+}
+
+const sequelize = new Sequelize(databaseUrl, {
+	logging: false,
+});
 sequelize
 	.sync({
 		alter: true,
