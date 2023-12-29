@@ -27,3 +27,4 @@ dist-ssr
 
 commitlint.config.js
 ```
+backend/.env
