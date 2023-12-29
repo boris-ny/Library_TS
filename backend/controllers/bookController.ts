@@ -3,6 +3,7 @@ import Book from '../models/book.models';
 import Author from '../models/author.models';
 import { celebrate, Joi, Segments } from 'celebrate';
 import Genre from '../models/genre.models';
+import logger from './../helpers/logger';
 
 // GET /books
 
@@ -11,12 +12,14 @@ export const getAllBooks = async (_req: Request, res: Response) => {
 		const books = await Book.findAll({
 			include: [{ model: Genre }, { model: Author }],
 		});
+		logger.info(`Books`, books);
 		return res.json({
 			status: 200,
 			message: 'success',
 			data: books,
 		});
 	} catch (err: unknown) {
+		logger.error((err as Error).message);
 		return res.status(500).json({ message: (err as Error).message });
 	}
 };
@@ -42,6 +45,7 @@ export const getBookById = async (req: Request, res: Response) => {
 			data: book,
 		});
 	} catch (err: unknown) {
+		logger.error((err as Error).message);
 		return res.status(500).json({ message: 'Internal Error' });
 	}
 };
@@ -79,6 +83,7 @@ export const postBookCreate = async (
 			data: book,
 		});
 	} catch (err: unknown) {
+		logger.error((err as Error).message);
 		return res.status(500).json({ message: (err as Error).message });
 	}
 };
@@ -110,6 +115,7 @@ export const BookDelete = async (
 			book: book.id,
 		});
 	} catch (err: unknown) {
+		logger.error((err as Error).message);
 		return res.status(500).json({ message: (err as Error).message });
 	}
 };
@@ -137,6 +143,7 @@ export const postBookUpdate = async (req: Request, res: Response) => {
 			book: book.id,
 		});
 	} catch (err: unknown) {
+		logger.error((err as Error).message);
 		res.status(500).json({ message: (err as Error).message });
 	}
 };
